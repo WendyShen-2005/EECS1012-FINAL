@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="signUp.js"></script>
+</head>
+<body>
+    <div class="SignUp">
+        <div class="Group7">
+            <div class="Rectangle4"></div>
+            <div class="Home">Home</div>
+            <button class="AuthOption" onclick="showLogin()">Login</button>
+            <button class="AuthOption" onclick="showSignup()">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="LoginForm" class="AuthForm" style="display:none;">
+            <input type="text" class="InputField" placeholder="Username" />
+            <input type="password" class="InputField" placeholder="Password" />
+            <button class="SubmitButton">Login</button>
+        </div>
+
+        <!-- Sign Up Form -->
+        <div id="SignUpForm" class="AuthForm" style="display:none;">
+            <input type="text" class="InputField" placeholder="Create a username" />
+            <input type="password" class="InputField" placeholder="Create a password" />
+            <button class="SubmitButton">Sign Up</button>
+        </div>
+    </div>
+    
+</body>
+</html>
+    
