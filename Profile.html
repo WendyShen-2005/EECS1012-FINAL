@@ -10,17 +10,17 @@
 </head>
 <body>
     <div class="navbar">
-        <a>Home</a>
+        <a class="navbar-button">Home</a>
         <div>
-            <a>Edit Pages</a>
-            <a>My Profile</a>
+            <a class="navbar-button">Edit Pages</a>
+            <a class="navbar-button">My Profile</a>
         </div>
     </div>
 
     <br/>
     <br/>
     <div id="profile">
-        <img src="images/default.jpg" alt="N/A"/>
+        <img src="images/default.jpg" alt="profile picture" id="profile-picture"/>
         <div id="username-follow">
             <h1>@Username</h1>
             <button>+ Follow</button>
@@ -38,37 +38,34 @@
         <hr/>
 
         <div id="pages">
-            <table>
-                <tr>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                </tr>
-                <tr>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                    <th>
-                        <img src="images/default.jpg" alt="img"/>
-                        <h1>Page Title</h1>
-                    </th>
-                </tr>
-            </table>
-            
+            <div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+            </div>
+            <div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+                <div role="button" class="page-link">
+                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <h1 class="page-title">Page Title</h1>
+                </div>
+            </div>
         </div>
 
     </div>
