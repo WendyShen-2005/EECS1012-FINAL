@@ -1,4 +1,8 @@
 * {
+    --grey-bg: rgb(151, 151, 151);
+    --light-grey: rgb(198, 198, 198);
+    --dark-grey: rgb(85, 85, 85);
+    --darker-grey: rgb(58, 58, 58);
     font-family: sans-serif;
     margin: 0px;
 }
@@ -18,7 +22,7 @@
 }
 
 #profile {
-    background-color: grey;
+    background-color: var(--grey-bg);
     margin: 50px;
     padding: 25px;
     text-align: center;
@@ -40,7 +44,7 @@
 #stats > h3 {
     font-weight: normal;
     margin: 10px;
-    color: rgb(71, 71, 71);
+    color: var(--dark-grey);
 }
 #username-follow {
     display: flex;
@@ -77,6 +81,7 @@
 }
 .page-link {
     margin: 10px;
+    width: 30%;
 }
 .page-img {
     width: 100%;
@@ -85,8 +90,8 @@
 .page-title {
     font-weight: normal;
     font-size: 30px;
-    background-color: rgb(98, 98, 98);
-    color: rgb(198, 198, 198);
+    background-color: var(--dark-grey);
+    color: var(--light-grey);
     transition: all 0.5s ease;
 }
 .page-title:hover {
@@ -95,7 +100,7 @@
 }
 hr {
     margin: 10px;
-    border: 1px solid rgb(98, 98, 98);
+    border: 1px solid var(--dark-grey);
 }
 #profile-picture {
     border-radius: 50%;
