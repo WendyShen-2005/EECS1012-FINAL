@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="eng">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title> Your blog begins!</title>
+        <link rel="stylesheet" href="pageEditor.css" title="style"/>
+        <script src="pageEditor.js"> </script>
+        <!--<script src="https://kit.fontawesome.com/2a5e0b1595.js" crossorigin="anonymous"></script> -->
+    </head>
+
+    <body onload="loadScript()">
+        <h1> Text editor </h1>
+        <div id="toolbar">
+            <button onclick="bold()"> 
+                <i class="fa-solid fa-bold"></i>
+            </button>
+            <button onclick="italic()"> 
+                <i class="fa-solid fa-italic"></i> 
+            </button>
+            <button onclick="underline()">
+                <i class="fa-solid fa-underline"></i>
+            </button>
+            <button onclick="leftAlign()"> 
+                <i class="fas fa-align-left"></i>
+            </button> 
+            <button onclick="centerAlign()"> 
+                <i class="fas fa-align-center"></i>
+            </button>
+            <button onclick="rightAlign()"> 
+                <i class="fas fa-align-right"></i>
+            </button>
+        </div>
+        <br>
+        <br>
+        <div class="rows">
+            <div class="textbox">
+                <textarea
+                    id="textarea1" 
+                    name="name"
+                    rows = "15" 
+                    cols = "100"
+                    placeholder = "Write here...">
+                </textarea>
+            </div>
+        </div>
+        <br>
+        <br>
+        <div id="submit">
+            <button onclick="save()"> Save </button>
+            <button onclick="publish()"> Publish </button> 
+        </div>
+    </body>
+</html>
