@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings Page</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="accountSetting.js"></script>
 </head>
 <body>
     <div class="Setting">
@@ -16,9 +17,21 @@
             </div>
         </div>
         <div class="Group10">
-            <input type="text" class="InputField Username" placeholder="Username">
-            <input type="email" class="InputField Email" placeholder="Email">
-            <input type="password" class="InputField Password" placeholder="Password">
+            <div>
+                <input type="text" class="InputField Username" placeholder="Username" disabled>
+                <!-- Change button for Username -->
+                <button onclick="enableEdit('.Username')">Change</button>
+            </div>
+            <div>
+                <input type="email" class="InputField Email" placeholder="Email" disabled>
+                <!-- Change button for Email -->
+                <button onclick="enableEdit('.Email')">Change</button>
+            </div>
+            <div>
+                <input type="password" class="InputField Password" placeholder="Password" disabled>
+                <!-- Change button for Password -->
+                <button onclick="enableEdit('.Password')">Change</button>
+            </div>
             <button class="SubmitButton Done">Done</button>
         </div>
         <div class="AccountSettingTitle">Account Setting</div>
