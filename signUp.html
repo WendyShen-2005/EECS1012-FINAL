@@ -16,19 +16,19 @@
             <button class="AuthOption" onclick="showSignup()">Sign Up</button>
         </div>
 
-        <!-- Login Form -->
-        <div id="LoginForm" class="AuthForm" style="display:none;">
-            <input type="text" class="InputField" placeholder="Username" />
-            <input type="password" class="InputField" placeholder="Password" />
-            <button class="SubmitButton">Login</button>
-        </div>
+<!-- Sign Up Form -->
+<div id="SignUpForm" class="AuthForm" style="display:none;">
+    <input type="text" id="signupUsername" class="InputField" placeholder="Create a username" />
+    <input type="password" id="signupPassword" class="InputField" placeholder="Create a password" />
+    <button class="SubmitButton" onclick="saveCredentials()">Sign Up</button>
+</div>
 
-        <!-- Sign Up Form -->
-        <div id="SignUpForm" class="AuthForm" style="display:none;">
-            <input type="text" class="InputField" placeholder="Create a username" />
-            <input type="password" class="InputField" placeholder="Create a password" />
-            <button class="SubmitButton">Sign Up</button>
-        </div>
+<!-- Login Form -->
+<div id="LoginForm" class="AuthForm" style="display:none;">
+    <input type="text" id="loginUsername" class="InputField" placeholder="Username" />
+    <input type="password" id="loginPassword" class="InputField" placeholder="Password" />
+    <button class="SubmitButton" onclick="checkLogin()">Login</button>
+</div>
     </div>
     
 </body>
