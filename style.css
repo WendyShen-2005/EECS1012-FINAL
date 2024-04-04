@@ -85,6 +85,13 @@
     position: absolute;
   }
   
+  .Setting {
+    width: 1280px;
+    height: 1500px;
+    position: relative;
+    background: white;
+}
+
   .Rectangle4 {
     width: 1280px;
     height: 123px;
@@ -93,18 +100,30 @@
   }
   
   .Home, .AuthOption {
+  /*  position: absolute;
+    text-align: center;
+    color: white;
+    font-size: 33px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    word-wrap: break-word;*/
+
     position: absolute;
     text-align: center;
     color: white;
     font-size: 33px;
     font-family: 'Inter', sans-serif;
     font-weight: 400;
+    cursor: pointer;
+    background: none;
+    border: none;
     word-wrap: break-word;
   }
   
   .Home {
     left: 79px;
     top: 40px;
+    background: black;
   }
 
   .AuthOption {
@@ -154,4 +173,24 @@
     left: 1085px;
     top: 41px;
   }
+
+
+  .Rectangle1 {
+    width: 1208px;
+    height: 1321px;
+    left: 37px;
+    top: 123px;
+    position: absolute;
+    background: #FFFCFC;
+}
+
+.Line1 {
+  width: 1007px;
+  height: 0;
+  left: 139px;
+  top: 387px;
+  position: absolute;
+  border: 1px solid black;
+}
+
 
