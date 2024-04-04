@@ -169,3 +169,22 @@
   font-weight: 400;
   text-align: center;
 }
+
+/* General button styles */
+.Group10 button {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  background-color: #F0EEEE;
+  color: #000;
+  font-size: 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.Group10 button:hover {
+  background-color: #E6E6E6;
+}
