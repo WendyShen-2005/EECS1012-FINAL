@@ -109,15 +109,58 @@ app.post('/post', (req, res) => {
 
                     if(profiles[i].username == queryInfo['name']){
                         console.log("sadiu")
-                        userData +='"bgSetting":"' + profiles[i].bgSetting + '", ';
-                        userData +='"bgColor":"' + profiles[i].bgColor+ '", ';
-                        userData +='"bgImg":"'+profiles[i].bgImg+'", ';
-                        userData +='"pfp":"'+profiles[i].pfp+'", ';
-                        userData +='"description":"'+profiles[i].description+'"}';
+                        userData +=`"bgSetting":"${profiles[i].bgSetting}", `;
+                        userData +=`"bgColor":"${profiles[i].bgColor}", `;
+                        userData +=`"bgImg":"${profiles[i].bgImg}", `;
+                        userData +=`"pfp":"${profiles[i].pfp}", `;
+                        userData +=`"description":"${profiles[i].description}", `;
+                        userData +=`"textColor":"${profiles[i].textColor}"}`;
                     }
                 }
                 console.log(userData)
                 res.send(userData);
+            } catch(err){
+                console.log(err);
+            }
+        })
+    } else if(queryInfo['action'] == 'setTextColor'){
+        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);
+            try {
+                var profiles = JSON.parse(jsonString);
+                for(var i = 0; i < profiles.length; i++){
+                    if(profiles[i].username == queryInfo['name']){
+                        profiles[i].textColor = queryInfo['color'];
+                        console.log(profiles[i].textColor)
+                    }
+                }
+                console.log(profiles)
+                fileWriter(profiles);
+            } catch(err){
+                console.log(err);
+            }
+        })
+        saved(res);
+    } else if(queryInfo['action'] == 'checkIfDescSaved'){
+        console.log("desc")
+        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);
+            try {
+                var profiles = JSON.parse(jsonString);
+                for(var i = 0; i < profiles.length; i++){
+                    if(profiles[i].username == queryInfo['name']){
+                        console.log("hello")
+                        if(profiles[i].description == queryInfo['newDesc']){
+                        res.send(JSON.stringify({
+                            'action':'descSaved'
+                        }))
+                        } else {
+                            console.log("bye")
+                            res.send(JSON.stringify({
+                                'action':'descNotSaved'
+                            }))
+                        }
+                }}
             } catch(err){
                 console.log(err);
             }

@@ -3,7 +3,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Profile</title>
+    <title>Profile Editor</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../styles/Profile.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='../../styles/Profile-editor.css'>
@@ -24,12 +24,12 @@
         <div id="edit-background">
             <div>
                 <img src="../../svgs/setting-5-svgrepo-com.svg">
-                <h1>Edit Background</h1>
+                <h1>Page settings</h1>
             </div>
             <div>
                 <label>Background Color: </label>
                 <input type="color" id="color-picker">
-                <button onclick="saveBGColor()">Set color</button>
+                <button onclick="saveBGColor()">Set background color</button>
             </div>
             <form target="_blank" action="http://localhost:3000/api/upload/bgImg" enctype="multipart/form-data" method="post">
                 <label for="bgImg">Background Image: </label>
@@ -37,6 +37,11 @@
                 <button type="submit">Upload</button>
                 <button onclick="setBgImg()">Set Image</button>
             </form>
+            <div>
+                <label>Text color</label>
+                <input type="color" id="text-color-picker">
+                <button onclick="saveTextColor()">Set text color</button>
+            </div>
         </div>
 
         <br/><br/>
@@ -71,12 +76,12 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
             <div>
                 <button onclick="saveDesc()">Save</button>
                 <br/><br/>
-                <p>Status: Saved</p>
+                <p id="descSaveStatus">Status: Saved</p>
             </div>
         </div>
         </p>
         <br/>
-        <hr/>
+        <hr id="line"/>
 
         <div id="pages">
             <div>
