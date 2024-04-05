@@ -84,6 +84,20 @@ app.post('/post', (req, res) => {
             }
         })
         saved(res);
+    } else if(queryInfo['action'] == 'setDesc'){
+        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);
+            try {
+                var profiles = JSON.parse(jsonString);
+                for(var i = 0; i < profiles.length; i++)
+                    if(profiles[i].username == queryInfo['name'])
+                        profiles[i].description = queryInfo['desc'];
+                fileWriter(profiles);
+            } catch(err){
+                console.log(err);
+            }
+        })
+        saved(res);
     }
 })
 

@@ -47,6 +47,15 @@ clearPFP = () => {
     }),response);
 }
 
+saveDesc = () => {
+    console.log(document.getElementById("description").value);
+    $.post(url+'?data='+JSON.stringify({
+        'name':'test',
+        'action':'setDesc',
+        'desc':document.getElementById("description").value
+    }),response);
+}
+
 function response(data, status){
     var response = JSON.parse(data);
 
