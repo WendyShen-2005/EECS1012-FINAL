@@ -5,9 +5,9 @@
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Profile</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel='stylesheet' type='text/css' media='screen' href='styles/Profile.css'>
-    <link rel='stylesheet' type='text/css' media='screen' href='styles/Profile-editor.css'>
-    <script src='scripts/profile-editor.js'></script> 
+    <link rel='stylesheet' type='text/css' media='screen' href='../../styles/Profile.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../../styles/Profile-editor.css'>
+    <script src='../../scripts/profile-editor.js'></script> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
@@ -23,7 +23,7 @@
     <div id="profile">
         <div id="edit-background">
             <div>
-                <img src="svgs/setting-5-svgrepo-com.svg">
+                <img src="../../svgs/setting-5-svgrepo-com.svg">
                 <h1>Edit Background</h1>
             </div>
             <div>
@@ -42,7 +42,7 @@
         <br/><br/>
 
         <div id="profile-picture-editor">
-            <img src="images/default.jpg" alt="profile picture" id="profile-picture"/>
+            <img src="../../images/default.jpg" alt="profile picture" id="profile-picture"/>
             <form target="_blank" action="http://localhost:3000/api/upload/pfp" enctype="multipart/form-data" method="post">
                 <label for="pfp">Change profile picture:</label>
                 <input type="file" name="pfp" id="pfp" accept="image/*">
@@ -55,7 +55,7 @@
         <br/>
 
         <div id="username-follow">
-            <h1>@Username</h1>
+            <h1 id="username">@Username</h1>
         </div>
         <div id="stats">
             <h3>Pages: X</h3>
@@ -81,35 +81,35 @@ Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
         <div id="pages">
             <div>
                 <div role="button" class="page-link">
-                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <img class="page-img" src="../../images/default.jpg" alt="img"/>
                     <h1 class="page-title">Page Title
-                        <img class="edit-page-button" role="button" src="svgs/pen-svgrepo-com.svg">
+                        <img class="edit-page-button" role="button" src="../../svgs/pen-svgrepo-com.svg">
                     </h1>
                 </div>
                 <div role="button" class="page-link">
-                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <img class="page-img" src="../../images/default.jpg" alt="img"/>
                     <h1 class="page-title">Page Title
-                        <img class="edit-page-button" role="button" src="svgs/pen-svgrepo-com.svg">
+                        <img class="edit-page-button" role="button" src="../../svgs/pen-svgrepo-com.svg">
                     </h1>
                 </div>
                 <div role="button" class="page-link">
-                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <img class="page-img" src="../../images/default.jpg" alt="img"/>
                     <h1 class="page-title">Page Title
-                        <img class="edit-page-button" role="button" src="svgs/pen-svgrepo-com.svg">
+                        <img class="edit-page-button" role="button" src="../../svgs/pen-svgrepo-com.svg">
                     </h1>
                 </div>
             </div>
             <div>
                 <div role="button" class="page-link">
-                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <img class="page-img" src="../../images/default.jpg" alt="img"/>
                     <h1 class="page-title">Page Title
-                        <img class="edit-page-button" role="button" src="svgs/pen-svgrepo-com.svg">
+                        <img class="edit-page-button" role="button" src="../../svgs/pen-svgrepo-com.svg">
                     </h1>
                 </div>
                 <div role="button" class="page-link">
-                    <img class="page-img" src="images/default.jpg" alt="img"/>
+                    <img class="page-img" src="../../images/default.jpg" alt="img"/>
                     <h1 class="page-title">Page Title
-                        <img class="edit-page-button" role="button" src="svgs/pen-svgrepo-com.svg">
+                        <img class="edit-page-button" role="button" src="../../svgs/pen-svgrepo-com.svg">
                     </h1>
                 </div>
                 <div role="button" class="page-link" id="add-page">

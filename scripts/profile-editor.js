@@ -1,8 +1,14 @@
 var url = "http://localhost:3000/post";
-var editBg = false;
 
-var user = 'test';
+//figuring out which user we're working with
+var documentPath =  window.location.href;
+documentPath = documentPath.substring(
+    documentPath.lastIndexOf("users/") + 6, 
+    documentPath.lastIndexOf("/")
+);
+var user = documentPath;
 
+// send request to retrieve user styles & images
 document.addEventListener('DOMContentLoaded', () => {
     $.post(url+'?data='+JSON.stringify({
         'name':user,
@@ -10,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }),response);
 });
 
+// change current page background color & send request to update user preferences
 saveBGColor = () => {
     const bg = document.getElementById("profile");
     bg.style.backgroundImage = null;
@@ -72,14 +79,18 @@ function response(data, status){
     if(response['action'] == 'saved')
         console.log("saved");
     else if(response['action'] == 'updateProfile'){
+        console.log("Updated styles")
+        document.getElementById("username").innerHTML = "@" + user;
         document.getElementById("description").value = response['description'];
-        document.getElementById("profile-picture").src = "images/"+response['pfp'];
+        document.getElementById("description").innerHTML = response['description'];
+
+        document.getElementById("profile-picture").src = "../../images/"+response['pfp'];
         if(response['bgSetting'] == 'color'){
             document.getElementById("profile").style.backgroundImage = null;
             document.getElementById("profile").style.backgroundColor = "#" + response['bgColor'];
         } else {
             document.getElementById("profile").style.backgroundColor = null;
-            document.getElementById("profile").style.backgroundImage = `url("images/${response['bgImg']}")`;
+            document.getElementById("profile").style.backgroundImage = `url("../../images/${response['bgImg']}")`;
         }
     }
 }
