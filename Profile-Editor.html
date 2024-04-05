@@ -8,6 +8,7 @@
     <link rel='stylesheet' type='text/css' media='screen' href='styles/Profile.css'>
     <link rel='stylesheet' type='text/css' media='screen' href='styles/Profile-editor.css'>
     <script src='scripts/profile-editor.js'></script> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
     <div class="navbar">
@@ -28,26 +29,27 @@
             <div>
                 <label>Background Color: </label>
                 <input type="color" id="color-picker">
-                <button onclick="saveBGColor()">Save</button>
+                <button onclick="saveBGColor()">Set color</button>
             </div>
-            <form target="_blank" action="http://localhost:3000/api/upload" enctype="multipart/form-data" method="post">
-                <label or="bgImg">Background Image: </label>
+            <form target="_blank" action="http://localhost:3000/api/upload/bgImg" enctype="multipart/form-data" method="post">
+                <label for="bgImg">Background Image: </label>
                 <input type="file" name="bgImg" id="bgImg" accept="image/*">
                 <button type="submit">Upload</button>
                 <button onclick="setBgImg()">Set Image</button>
             </form>
-            <button>Clear Image</button>
         </div>
 
         <br/><br/>
 
         <div id="profile-picture-editor">
             <img src="images/default.jpg" alt="profile picture" id="profile-picture"/>
-            <div>
-                <label>Change profile picture:</label>
-                <input type="file">
-                <button>Clear Image</button>
-            </div>
+            <form target="_blank" action="http://localhost:3000/api/upload/pfp" enctype="multipart/form-data" method="post">
+                <label for="pfp">Change profile picture:</label>
+                <input type="file" name="pfp" id="pfp" accept="image/*">
+                <button type="submit">Upload</button>
+                <button onclick="setPFP()">Set Image</button>
+                <button onclick="clearPFP()">Clear Image</button>
+            </form>
         </div>
 
         <br/>

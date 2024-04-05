@@ -1,9 +1,11 @@
 [
-    {
-        "username": "test",
-        "password": "123",
-        "background-setting": "color",
-        "bgcolor": "rgb(151, 151, 151)",
-        "bgimg": "N/A"
-    }
+  {
+    "username": "test",
+    "password": "123",
+    "bgSetting": "color",
+    "bgImg": "calcq1.jpg",
+    "bgColor": "da7171",
+    "pfp": "calcq3.jpg",
+    "description": "Hello :)"
+  }
 ]
