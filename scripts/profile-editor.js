@@ -1,15 +1,24 @@
 var url = "http://localhost:3000/post";
 var editBg = false;
 
+var user = 'test';
+
+document.addEventListener('DOMContentLoaded', () => {
+    $.post(url+'?data='+JSON.stringify({
+        'name':user,
+        'action':'loadSavedContent'
+    }),response);
+});
+
 saveBGColor = () => {
     const bg = document.getElementById("profile");
     bg.style.backgroundImage = null;
     var color = document.getElementById("color-picker").value + "";
     bg.style.backgroundColor = color;
     $.post(url+'?data='+JSON.stringify({
-        'name':'test',
+        'name':user,
         'action':'setBGColor',
-        'color':'/'+color
+        'color':color.substring(1,color.length)
     }),response);
 }
 setBgImg = () => {
@@ -20,7 +29,7 @@ setBgImg = () => {
     console.log(fileName);
     bg.style.backgroundImage = `url("images/${fileName}")`;
     $.post(url+'?data='+JSON.stringify({
-        'name':'test',
+        'name':user,
         'action':'setBgImg',
         'imgName':fileName
     }),response);
@@ -32,7 +41,7 @@ setPFP = () => {
     console.log(fileName);
     pfp.src = `images/${fileName}`;
     $.post(url+'?data='+JSON.stringify({
-        'name':'test',
+        'name':user,
         'action':'setPFP',
         'imgName':fileName
     }),response);
@@ -41,7 +50,7 @@ clearPFP = () => {
     const pfp = document.getElementById("profile-picture");
     pfp.src = `images/default.jpg`;
     $.post(url+'?data='+JSON.stringify({
-        'name':'test',
+        'name':user,
         'action':'setPFP',
         'imgName':'default.jpg'
     }),response);
@@ -50,15 +59,27 @@ clearPFP = () => {
 saveDesc = () => {
     console.log(document.getElementById("description").value);
     $.post(url+'?data='+JSON.stringify({
-        'name':'test',
+        'name':user,
         'action':'setDesc',
         'desc':document.getElementById("description").value
     }),response);
 }
 
 function response(data, status){
-    var response = JSON.parse(data);
 
+    var response = JSON.parse(data);
+// console.log(response)
     if(response['action'] == 'saved')
         console.log("saved");
+    else if(response['action'] == 'updateProfile'){
+        document.getElementById("description").value = response['description'];
+        document.getElementById("profile-picture").src = "images/"+response['pfp'];
+        if(response['bgSetting'] == 'color'){
+            document.getElementById("profile").style.backgroundImage = null;
+            document.getElementById("profile").style.backgroundColor = "#" + response['bgColor'];
+        } else {
+            document.getElementById("profile").style.backgroundColor = null;
+            document.getElementById("profile").style.backgroundImage = `url("images/${response['bgImg']}")`;
+        }
+    }
 }

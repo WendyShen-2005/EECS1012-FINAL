@@ -1,3 +1,4 @@
+const { profile } = require('console');
 const express = require('express');
 const app = express();
 
@@ -35,7 +36,6 @@ app.post('/api/upload/pfp', upload.single('pfp'), (req, res) => {
 //Routes for saving bg preferences
 app.post('/post', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
-    console.log(req.query)
     var queryInfo = JSON.parse(req.query['data']);
 
     if(queryInfo['action'] == 'setBgImg'){
@@ -65,6 +65,7 @@ app.post('/post', (req, res) => {
                         profiles[i].bgColor = queryInfo['color'];
                     }
                 fileWriter(profiles);
+                console.log(profiles)
             } catch(err){
                 console.log(err);
             }
@@ -98,6 +99,29 @@ app.post('/post', (req, res) => {
             }
         })
         saved(res);
+    } else if(queryInfo['action'] == 'loadSavedContent'){
+        var userData = '{"action":"updateProfile", ';
+        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);
+            try {
+                var profiles = JSON.parse(jsonString);
+                for(var i = 0; i < profiles.length; i++){
+
+                    if(profiles[i].username == queryInfo['name']){
+                        console.log("sadiu")
+                        userData +='"bgSetting":"' + profiles[i].bgSetting + '", ';
+                        userData +='"bgColor":"' + profiles[i].bgColor+ '", ';
+                        userData +='"bgImg":"'+profiles[i].bgImg+'", ';
+                        userData +='"pfp":"'+profiles[i].pfp+'", ';
+                        userData +='"description":"'+profiles[i].description+'"}';
+                    }
+                }
+                console.log(userData)
+                res.send(userData);
+            } catch(err){
+                console.log(err);
+            }
+        })
     }
 })
 
