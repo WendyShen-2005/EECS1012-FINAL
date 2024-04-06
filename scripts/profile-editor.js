@@ -1,21 +1,27 @@
-var url = "http://localhost:3000/post";
+var url = "http://localhost:3000/post";//server url
+
+const documentPath =  window.location.href;//get url of page we're working with
 
 //figuring out which user we're working with
-const documentPath =  window.location.href;
 const documentUser = documentPath.substring(
     documentPath.lastIndexOf("users/") + 6, 
     documentPath.lastIndexOf("/")
 );
 var user = documentUser;
 
-// send request to retrieve user styles & images
+//function: send request to retrieve user styles & images
+//pre conditions: page has been refreshed
+//post conditions: send necessary info to server to update styles & images
 document.addEventListener('DOMContentLoaded', () => {
+    //send request to refresh styles & images to server
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'loadSavedContent'
     }),response);
-    if(documentPath.indexOf("editor") != -1){
-        document.getElementById("description").addEventListener("input", () => {
+
+    //purpose of this block: if the user has edited description but has not saved, display the status to the user
+    if(documentPath.indexOf("editor") != -1){ //see if we're in the profile editor or just the profile display
+        document.getElementById("description").addEventListener("input", () => { //send request to check with backend database
             $.post(url+'?data='+JSON.stringify({
                 'name':user,
                 'action':'checkIfDescSaved',
@@ -25,56 +31,90 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// change current page background color & send request to update user preferences
+// function: change current page background color & send request to update user preferences
+//pre conditions: user has updated background color
+//post conditions: update background color & send to server to save preference
 saveBGColor = () => {
-    const bg = document.getElementById("profile");
-    bg.style.backgroundImage = null;
-    var color = document.getElementById("color-picker").value + "";
-    bg.style.backgroundColor = color;
+    const bg = document.getElementById("profile"); //get background element
+    bg.style.backgroundImage = null; //make sure background image does not display
+    var color = document.getElementById("color-picker").value + "";//retrieve color
+    bg.style.backgroundColor = color;//set color background
+
+    //send request to server to save the new color background
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setBGColor',
         'color':color.substring(1,color.length)
     }),response);
 }
+
+//function: change & save text color
+//pre conditions: user has set a new color value
+//post conditions: update text color & send to server to save info
 saveTextColor = () => {
-    const color = document.getElementById("text-color-picker").value + "";
-    const hex = color.substring(1, color.length);
-    changeTextColor(hex);
+    const color = document.getElementById("text-color-picker").value + "";//retrieve new color from client
+    const hex = color.substring(1, color.length);//save data in format that will not mess up JSON
+    changeTextColor(hex);//call function to change all applicable text color
+
+    //send request to server to save text color
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setTextColor',
         'color':hex
     }),response);
 }
+
+//function: change & save background image
+//pre conditions: user has set a new background image
+//post conditions: change background image & send request to server to save the background preference
 setBgImg = () => {
-    const bg = document.getElementById("profile");
-    bg.style.backgroundColor = null;
+    const bg = document.getElementById("profile");//get background element
+    bg.style.backgroundColor = null;//make sure background color does not display
+
+    //get image name & change to proper format
     var fileName = document.getElementById('bgImg').value + "";
     fileName = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length);
-    console.log(fileName);
+    
+    //set background image
     bg.style.backgroundImage = `url("images/${fileName}")`;
+
+    //send request to server to save background image
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setBgImg',
         'imgName':fileName
     }),response);
 }
+
+//function: change & save profile picture 
+//pre conditions: user has updated profile picture file
+//post conditions: change profile picture & send request to server to save profile picture
 setPFP = () => {
-    const pfp = document.getElementById("profile-picture");
+    const pfp = document.getElementById("profile-picture");//get profile picture element
+
+    //get new profile picture file & change to proper format
     var fileName = document.getElementById('pfp').value + "";
     fileName = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length);
-    console.log(fileName);
+
+    //set new profile picture
     pfp.src = `images/${fileName}`;
+
+    //send request to server to save profile picture
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setPFP',
         'imgName':fileName
     }),response);
 }
+
+//function: clear profile picture & save preference
+//pre conditions: user has clicked 'clear profile picture' button
+//post conditions: change profile picture to default image & send request to server to save pfp preference
 clearPFP = () => {
-    const pfp = document.getElementById("profile-picture");
-    pfp.src = `images/default.jpg`;
+    const pfp = document.getElementById("profile-picture");//get profile picture element
+    pfp.src = `images/default.jpg`;//change element to default
+
+    //send request to save profile picture preference
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setPFP',
@@ -82,8 +122,11 @@ clearPFP = () => {
     }),response);
 }
 
+//function: save description
+//pre conditions: user has pressed 'save' for description box
+//post conditions: send request to server to save new description
 saveDesc = () => {
-    console.log(document.getElementById("description").value);
+    //send request to server to save new description
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'setDesc',
@@ -91,36 +134,13 @@ saveDesc = () => {
     }),response);
 }
 
-function response(data, status){
-
-    var response = JSON.parse(data);
-// console.log(response)
-    if(response['action'] == 'saved')
-        console.log("saved");
-    else if(response['action'] == 'updateProfile'){
-        console.log("Updated styles")
-        document.getElementById("username").innerHTML = "@" + user;
-        document.getElementById("description").value = response['description'];
-        document.getElementById("description").innerHTML = response['description'];
-        changeTextColor(response["textColor"]);
-        
-        document.getElementById("profile-picture").src = "../../images/"+response['pfp'];
-        if(response['bgSetting'] == 'color'){
-            document.getElementById("profile").style.backgroundImage = null;
-            document.getElementById("profile").style.backgroundColor = "#" + response['bgColor'];
-        } else {
-            document.getElementById("profile").style.backgroundColor = null;
-            document.getElementById("profile").style.backgroundImage = `url("../../images/${response['bgImg']}")`;
-        }
-    } else if(response['action'] == 'descSaved'){
-        document.getElementById("descSaveStatus").innerHTML = "Status: Saved"
-    } else if(response['action'] == 'descNotSaved'){
-        document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
-
-    }
-}
+//function: change text color
+//pre conditions: text color
+//post conditions: all relevent text & element colors are updated
 changeTextColor = (hex) => {
-    const colorCode = "#" + hex;
+    const colorCode = "#" + hex;//change hex parameter to proper format
+
+    //get & set all relevent text elements
     const stats = document.getElementById("stats").getElementsByTagName("h3");
     for(var i = 0; i < stats.length; i++){
         stats[i].style.color = colorCode;
@@ -134,10 +154,43 @@ changeTextColor = (hex) => {
         document.getElementById("description").style.color = "#000000";
     
 }
-// if(documentPath.indexOf("editor") != -1){
-//     console.log(document.getElementById("description").value)
-//     // document.getElementById("description").addEventListener("change", () => {
-//     //     console.log("hello")
-//     // }
-//     // );
-// }
+
+
+//function: recieve response from server & do appropriate action
+//pre conditions: server has sent a response
+//post conditions: client performs appropriate action
+function response(data, status){
+
+    var response = JSON.parse(data);//parse data from server
+
+    //response 1: indicate user preferences have been saved
+    if(response['action'] == 'saved')
+        console.log("saved");
+
+    //response 2: update user info
+    else if(response['action'] == 'updateProfile'){
+        console.log("Updated styles")
+
+        document.getElementById("username").innerHTML = "@" + user;//ensure username is display appropriate user
+        document.getElementById("description").value = response['description'];//update description for profile editor
+        document.getElementById("description").innerHTML = response['description'];//update description for profile display
+        changeTextColor(response["textColor"]);//call function to change text color
+        document.getElementById("profile-picture").src = "../../images/"+response['pfp'];//update profile picture
+
+        //background settings
+        if(response['bgSetting'] == 'color'){//color
+            document.getElementById("profile").style.backgroundImage = null;//ensure we don't display image
+            document.getElementById("profile").style.backgroundColor = "#" + response['bgColor'];//update bg color
+        } else {//image
+            document.getElementById("profile").style.backgroundColor = null;//ensure we don't display color
+            document.getElementById("profile").style.backgroundImage = `url("../../images/${response['bgImg']}")`;//update bg img
+        }
+    //response 3: description has been saved
+    } else if(response['action'] == 'descSaved'){
+        document.getElementById("descSaveStatus").innerHTML = "Status: Saved"
+    //response 4: description has not been saved
+    } else if(response['action'] == 'descNotSaved'){
+        document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
+
+    }
+}
