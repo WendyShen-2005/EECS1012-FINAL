@@ -21,7 +21,7 @@ function checkLogin() {
 
   if (username === localStorage.getItem('username') && password === localStorage.getItem('password')) {
     alert('Login Successful!');
-    // Redirect user or show logged-in state
+    window.location.href = 'General.html'; // Redirect to General.html
   } else {
     alert('Invalid username or password.');
   }
