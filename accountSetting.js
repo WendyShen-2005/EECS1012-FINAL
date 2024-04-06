@@ -12,8 +12,8 @@ function enableEdit(selector) {
     document.querySelector('.Password').value = localStorage.getItem('password') || '';
   }
   
-  // Save changes to localStorage
-  function saveChanges() {
+ // Save changes to localStorage
+function saveChanges() {
     const username = document.querySelector('.Username').value;
     const email = document.querySelector('.Email').value;
     const password = document.querySelector('.Password').value;
@@ -32,14 +32,18 @@ function enableEdit(selector) {
         localStorage.setItem('email', email);
         localStorage.setItem('password', password);
 
+        // Alert the user of successful save
         alert('Changes saved successfully.');
+
         // Optionally disable fields again after saving
         document.querySelectorAll('.InputField').forEach(field => field.disabled = true);
+
+        // Redirect to General.html
+        window.location.href = 'General.html';
     }
 }
-  
-  document.addEventListener('DOMContentLoaded', () => {
+
+document.addEventListener('DOMContentLoaded', () => {
     populateFields(); // Populate fields with existing values
     document.querySelector('.Done').addEventListener('click', saveChanges);
-  });
-  
+});
