@@ -30,10 +30,12 @@
 .navbar-button {
     margin: 0px 10px;
     color: rgb(172, 172, 172);
+    text-decoration: none;
     transition: all 0.5s ease;
 }
 .navbar-button:hover {
     color: white;
+    text-decoration: underline;
     transition: all 0.5s ease;
 }
 #stats {

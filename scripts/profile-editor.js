@@ -8,18 +8,24 @@ const documentUser = documentPath.substring(
     documentPath.lastIndexOf("/")
 );
 var user = documentUser;
+var loggedIn = "test";
 
-//function: send request to retrieve user styles & images
+//function: variety of functions for DOM loads
 //pre conditions: page has been refreshed
-//post conditions: send necessary info to server to update styles & images
+//post conditions: tasks listed below...
 document.addEventListener('DOMContentLoaded', () => {
-    //send request to refresh styles & images to server
+    //task 1: ensure user does not edit other people's profiles
+    if(loggedIn == null || (documentPath.indexOf("profile-editor.html") != -1 && user != loggedIn)){
+        console.log("Access denied.")
+        window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html"
+    }
+    //task 2: send request to refresh styles & images to server
     $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'loadSavedContent'
     }),response);
 
-    //purpose of this block: if the user has edited description but has not saved, display the status to the user
+    //task 3: if the user has edited description but has not saved, display the status to the user
     if(documentPath.indexOf("editor") != -1){ //see if we're in the profile editor or just the profile display
         document.getElementById("description").addEventListener("input", () => { //send request to check with backend database
             $.post(url+'?data='+JSON.stringify({
@@ -150,11 +156,10 @@ changeTextColor = (hex) => {
     document.getElementById("line").style.borderColor = colorCode;
     
     //if in editor mode, do not change description color
-    if(documentPath != -1)
+    if(documentPath.indexOf("profile-editor.html") != -1)
         document.getElementById("description").style.color = "#000000";
     
 }
-
 
 //function: recieve response from server & do appropriate action
 //pre conditions: server has sent a response
@@ -169,7 +174,14 @@ function response(data, status){
 
     //response 2: update user info
     else if(response['action'] == 'updateProfile'){
-        console.log("Updated styles")
+        console.log("Updated styles");
+
+        if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
+            document.getElementById("my-profile").innerHTML = `${loggedIn}'s profile`;
+            document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile-editor.html`
+        } else {
+            document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
+        }
 
         document.getElementById("username").innerHTML = "@" + user;//ensure username is display appropriate user
         document.getElementById("description").value = response['description'];//update description for profile editor
