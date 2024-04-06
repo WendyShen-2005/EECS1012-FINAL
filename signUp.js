@@ -3,7 +3,7 @@ function saveCredentials() {
   const username = document.getElementById('signupUsername').value;
   const password = document.getElementById('signupPassword').value;
 
-  // Check to ensure username and password are not empty
+  // Simple check to ensure username and password are not empty
   if (username && password) {
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
@@ -26,6 +26,7 @@ function checkLogin() {
     alert('Invalid username or password.');
   }
 }
+
 
 // Show login form and hide sign-up form
 function showLogin() {
