@@ -9,7 +9,7 @@ require('dotenv').config();
 
 const app = express();
 
-// Simulated in-memory 'database' for demonstration
+// Simulated in-memory 'database'
 const usersDb = {};
 
 app.use(morgan('dev'));
@@ -23,58 +23,93 @@ app.use(session({
   cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
 
+// Serve static files
+app.use(express.static(path.join(__dirname, 'frontend')));
+
+// Multer setup for file uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: (req, file, cb) => {
     cb(null, path.join(__dirname, 'frontend/images'));
   },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  filename: (req, file, cb) => {
+    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   }
 });
 
-const upload = multer({ storage: storage });
-app.use(express.static(path.join(__dirname, '../frontend')));
+const upload = multer({ storage });
 
 app.post('/api/upload', upload.single('bgImg'), (req, res) => {
   res.json({ message: 'File uploaded successfully.', file: req.file });
 });
 
-// Hashes the password and stores the user in the 'database'
+// User registration
 app.post('/api/signup', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ success: false, message: 'Username and password are required.' });
+  if (!username || !email || !password) {
+    return res.status(400).json({ message: 'All fields are required.' });
   }
 
   if (usersDb[username]) {
-    return res.status(400).json({ success: false, message: 'Username already exists.' });
+    return res.status(400).json({ message: 'Username already exists.' });
   }
 
   const hashedPassword = await bcrypt.hash(password, 8);
+  usersDb[username] = { email, password: hashedPassword };
 
-  usersDb[username] = { password: hashedPassword };
-
-  res.json({ success: true, message: 'Signup successful.' });
+  res.json({ message: 'Signup successful.' });
 });
 
-// Checks the user's credentials and logs them in
+// User login
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
-
   const user = usersDb[username];
 
   if (!user) {
-    return res.status(400).json({ success: false, message: 'User does not exist.' });
+    return res.status(400).json({ message: 'User does not exist.' });
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
   if (!isMatch) {
-    return res.status(401).json({ success: false, message: 'Password is incorrect.' });
+    return res.status(401).json({ message: 'Invalid credentials.' });
   }
 
-  res.json({ success: true, message: 'Login successful.' });
+  // Assuming successful login
+  req.session.username = username; // Save username in session
+  res.json({ message: 'Login successful.' });
+});
+
+// Retrieve current user settings
+app.get('/api/settings', (req, res) => {
+  const { username } = req.session;
+  
+  if (!username || !usersDb[username]) {
+    return res.status(404).json({ message: 'User not found.' });
+  }
+
+  const user = usersDb[username];
+  res.json({ username, email: user.email });
+});
+
+// Update user settings
+app.post('/api/updateSettings', async (req, res) => {
+  const { username } = req.session;
+  const { email, password } = req.body;
+
+  if (!username || !usersDb[username]) {
+    return res.status(404).json({ message: 'User not found.' });
+  }
+
+  if (email) {
+    usersDb[username].email = email;
+  }
+  
+  if (password) {
+    usersDb[username].password = await bcrypt.hash(password, 8);
+  }
+
+  res.json({ message: 'Settings updated successfully.' });
 });
 
 const PORT = process.env.PORT || 3000;
