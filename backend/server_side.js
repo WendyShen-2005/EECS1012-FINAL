@@ -129,6 +129,7 @@ app.post('/post', (req, res) => {
                         userData +=`"textColor":"${profiles[i].textColor}"}`;
                     }
                 }
+                console.log(userData)
                 console.log("user data sent.");
                 res.send(userData);
             } catch(err){//handle errors

@@ -2,11 +2,11 @@
   {
     "username": "test",
     "password": "123",
-    "bgSetting": "color",
+    "bgSetting": "img",
     "bgImg": "q2a.jpg",
-    "bgColor": "182559",
+    "bgColor": "dc7979",
     "pfp": "calcq3.jpg",
-    "description": "very happy :)",
-    "textColor": "9cddde"
+    "description": "very sad :(",
+    "textColor": "000000"
   }
 ]

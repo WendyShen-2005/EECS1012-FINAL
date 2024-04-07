@@ -7,17 +7,29 @@ const documentUser = documentPath.substring(
     documentPath.lastIndexOf("users/") + 6, 
     documentPath.lastIndexOf("/")
 );
+
+
 var user = documentUser;
-var loggedIn = "test";
+var loggedIn = localStorage.getItem("loggedIn");
+// var loggedIn = 'test';
+
+console.log(localStorage.getItem("loggedIn"))
+
+logOut = () => {
+    loggedIn = null;
+    console.log("logged out");
+    localStorage.setItem("loggedIn", loggedIn)
+}
 
 //function: variety of functions for DOM loads
 //pre conditions: page has been refreshed
 //post conditions: tasks listed below...
 document.addEventListener('DOMContentLoaded', () => {
+    localStorage.setItem("loggedIn", loggedIn)
     //task 1: ensure user does not edit other people's profiles
-    if(loggedIn == null || (documentPath.indexOf("profile-editor.html") != -1 && user != loggedIn)){
-        console.log("Access denied.")
-        window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html"
+    if(documentPath.indexOf("profile-editor.html") != -1 && (loggedIn == null || user != loggedIn)){
+        console.log("Access denied.");
+        window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html";
     }
     //task 2: send request to refresh styles & images to server
     $.post(url+'?data='+JSON.stringify({
@@ -35,6 +47,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }), response);
         })
     }
+
+    // if(loggedIn == null){
+    //     document.getElementById("my-profile").;
+
+    // }
 });
 
 // function: change current page background color & send request to update user preferences
@@ -80,7 +97,6 @@ setBgImg = () => {
     //get image name & change to proper format
     var fileName = document.getElementById('bgImg').value + "";
     fileName = fileName.substring(fileName.lastIndexOf('\\') + 1, fileName.length);
-    
     //set background image
     bg.style.backgroundImage = `url("images/${fileName}")`;
 
@@ -176,11 +192,27 @@ function response(data, status){
     else if(response['action'] == 'updateProfile'){
         console.log("Updated styles");
 
-        if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
-            document.getElementById("my-profile").innerHTML = `${loggedIn}'s profile`;
-            document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile-editor.html`
+        if(loggedIn != 'null'){
+            console.log(loggedIn != null + "" + loggedIn)
+            if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
+                document.getElementById("my-profile").style.display = "default";
+                document.getElementById("my-profile").innerHTML = `${loggedIn}'s profile`;
+                // console.log(loggedIn)
+                document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile-editor.html`
+            } else {
+                document.getElementById("my-profile").style.display = "default";
+                document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
+            }
+            document.getElementById("login-logout").innerHTML = "Log out";
+            document.getElementById("login-logout").href = "";
+            document.getElementById("login-logout").onclick = logOut;
+            console.log(loggedIn)
         } else {
-            document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
+            console.log("hello")
+            document.getElementById("my-profile").style.display = "none";
+            document.getElementById("login-logout").innerHTML = "Log in";
+            document.getElementById("login-logout").href = "";
+            document.getElementById("login-logout").onclick = null;
         }
 
         document.getElementById("username").innerHTML = "@" + user;//ensure username is display appropriate user
@@ -200,9 +232,10 @@ function response(data, status){
     //response 3: description has been saved
     } else if(response['action'] == 'descSaved'){
         document.getElementById("descSaveStatus").innerHTML = "Status: Saved"
+        document.getElementById("descSaveStatus").style.color = "green";
     //response 4: description has not been saved
     } else if(response['action'] == 'descNotSaved'){
         document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
-
+        document.getElementById("descSaveStatus").style.color = "red";
     }
 }
