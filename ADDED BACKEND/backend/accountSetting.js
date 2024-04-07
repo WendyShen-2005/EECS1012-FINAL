@@ -1,6 +1,6 @@
 // Enable editing of input fields
 function enableEdit(selector) {
-    document.querySelector(selector).disabled = false;
+    document.querySelector(selector).removeAttribute('disabled'); // Remove the 'disabled' attribute
     document.querySelector(selector).focus();
 }
 
@@ -55,4 +55,7 @@ function saveChanges() {
 // Add event listeners after the DOM has loaded
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.Done').addEventListener('click', saveChanges);
+    document.querySelector('.change-username-button').addEventListener('click', () => enableEdit('.Username'));
+    document.querySelector('.change-email-button').addEventListener('click', () => enableEdit('.Email'));
+    document.querySelector('.change-password-button').addEventListener('click', () => enableEdit('.Password'));
 });
