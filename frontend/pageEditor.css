@@ -1,0 +1,57 @@
+body {
+    background-image: url("images/p1.jpg");
+    background-size: cover;
+}
+h1 { 
+    padding-top: 40px; 
+    padding-bottom: 40px; 
+    text-align: center;  
+    font-family: 'Montserrat', sans-serif; 
+} 
+button { 
+    width: 50px;
+    color: black !important; 
+    margin-bottom: 25px; 
+    padding: 3px 3px;
+    
+} 
+  
+button:hover { 
+    background-color:#ffffff !important; 
+} 
+  
+textarea { 
+    padding: 3%; 
+    outline: none;
+    border-width: light;
+    border-radius: 5px;
+    opacity: 75%;
+    color: #000000;
+    font-size: large;
+} 
+.textbox { 
+    display: flex; 
+    justify-content: center;
+}
+#toolbar { 
+    display: flex; 
+    justify-content: center; 
+}
+#submit { 
+    display: flex; 
+    justify-content: center; 
+}
+input {
+    width: 30%;
+    height: 150px;
+    border: none;
+    margin: 0 35%;
+    background-color: transparent;
+    color: #ffffff;
+    text-align: center;
+    font-size: 2rem;
+    float: center;
+}
+input:focus {
+    outline: none;
+}
