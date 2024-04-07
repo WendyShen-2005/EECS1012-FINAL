@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link rel="stylesheet" href="style.css">
-    <script src="signUp.js"></script>
+    <script src="signUp.js" defer></script>
+ <!-- Add 'defer' attribute to ensure script executes after DOM content is loaded -->
 </head>
 <body>
     <div class="SignUp">
@@ -15,20 +16,21 @@
             <button id="showLoginBtn" class="AuthOption">Login</button>
             <button id="showSignupBtn" class="AuthOption">Sign Up</button>
         </div>
+<!-- Sign Up Form -->
+<form id="SignUpForm" class="AuthForm" style="display:none;">
+    <input type="text" id="signupUsername" class="InputField" placeholder="Create a username" required />
+    <input type="password" id="signupPassword" class="InputField" placeholder="Create a password" required />
+    <button class="SubmitButton" type="submit">Sign Up</button>
+</form>
 
-        <!-- Sign Up Form -->
-        <div id="SignUpForm" class="AuthForm" style="display:none;">
-            <input type="text" id="signupUsername" class="InputField" placeholder="Create a username" />
-            <input type="password" id="signupPassword" class="InputField" placeholder="Create a password" />
-            <button class="SubmitButton">Sign Up</button>
-        </div>
+<!-- Login Form -->
+<form id="LoginForm" class="AuthForm" style="display:none;">
+    <input type="text" id="loginUsername" class="InputField" placeholder="Username" required />
+    <input type="password" id="loginPassword" class="InputField" placeholder="Password" required />
+    <button class="SubmitButton" type="submit">Login</button>
+</form>
 
-        <!-- Login Form -->
-        <div id="LoginForm" class="AuthForm" style="display:none;">
-            <input type="text" id="loginUsername" class="InputField" placeholder="Username" />
-            <input type="password" id="loginPassword" class="InputField" placeholder="Password" />
-            <button class="SubmitButton">Login</button>
-        </div>
+
     </div>
 </body>
 </html>
