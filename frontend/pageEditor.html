@@ -11,9 +11,14 @@
     </head>
 
     <body onload="loadScript()">
-        <p id="abc"></p>
+        
+        <nav class="navbar"> 
+            <a href="home.html" class="general" id="home"> Home </a>
+            <a href="https://www.google.com/" class="personal" id="profile"> My Profile </a>
+        </nav>
+
         <input type="text" id="title" name="title" placeholder="Your blog's title">
-        <div id="toolbar">
+        <div id="toolbar" class="toolbar">
             <button onclick="bold()"> 
                 <i class="fa-solid fa-bold"></i>
             </button>
@@ -32,6 +37,22 @@
             <button onclick="rightAlign()"> 
                 <i class="fas fa-align-right"></i>
             </button>
+            <button onclick="justifyAlign()">
+                <i class="fa-solid fa-align-justify"></i>
+            </button>
+            <!-- Font Change button -->
+            <div class="dropdown">
+                <button onclick="dropdown()" class="btnFontChange">
+                    <i class="fa-solid fa-font"></i>
+                </button>
+                <div id="myDropdown" class="dropdown-content">
+                    <p onclick="times()"> Times New Roman </p>
+                    <p onclick="georgia()"> Georgia </p>
+                    <p onclick="garamond()"> Garamond </p>
+                    <p onclick="arial()"> Arial </p>
+
+                </div>
+            </div>
         </div>
         <br>
         <br>
@@ -49,8 +70,8 @@
         <br>
         <div id="submit">
             <p id="inform"> </p>
-            <button onclick="save()"> Save draft </button>
-            <button onclick="publish()"> Publish </button> 
+            <button onclick="save()" class="btnSubmit"> Save draft </button>
+            <button onclick="publish()" class="btnSubmit"> Publish </button> 
         </div>
     </body>
 </html>
