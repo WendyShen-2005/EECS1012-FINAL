@@ -11,7 +11,7 @@ const documentUser = documentPath.substring(
 
 var user = documentUser;
 var loggedIn = localStorage.getItem("loggedIn");
-// var loggedIn = 'test';
+// loggedIn = 'test';
 
 console.log(localStorage.getItem("loggedIn"))
 
@@ -192,7 +192,7 @@ function response(data, status){
     else if(response['action'] == 'updateProfile'){
         console.log("Updated styles");
 
-        if(loggedIn != 'null'){
+        if(loggedIn != 'null' && loggedIn != null){
             console.log(loggedIn != null + "" + loggedIn)
             if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
                 document.getElementById("my-profile").style.display = "default";
@@ -206,10 +206,12 @@ function response(data, status){
             document.getElementById("login-logout").innerHTML = "Log out";
             document.getElementById("login-logout").href = "";
             document.getElementById("login-logout").onclick = logOut;
+            document.getElementById("account-settings").style.display = "default";
             console.log(loggedIn)
         } else {
             console.log("hello")
             document.getElementById("my-profile").style.display = "none";
+            document.getElementById("account-settings").style.display = "none";
             document.getElementById("login-logout").innerHTML = "Log in";
             document.getElementById("login-logout").href = "";
             document.getElementById("login-logout").onclick = null;
