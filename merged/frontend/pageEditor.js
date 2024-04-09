@@ -8,6 +8,8 @@ function loadScript() {
     script.crossOrigin = "anonymous";
     head.appendChild(script);
 }
+
+//functions to format text
 function bold() {
     document.getElementById("textarea1").style.fontWeight = "bold"; 
 }
@@ -30,10 +32,13 @@ function italic() {
 function underline() {
     document.getElementById("textarea1").style.textDecoration = "underline";
 }
+
+//Create a dropdown bar to select fonts
 function dropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
   }
-  // Close the dropdown menu if the user clicks outside of it
+
+// Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
 if (!event.target.matches('.btnFontChange')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -46,7 +51,7 @@ if (!event.target.matches('.btnFontChange')) {
     }
 }
 } 
-
+//change font size
 function times() {
     document.getElementById("textarea1").style.fontFamily = "Times New Roman";
 }
@@ -60,24 +65,21 @@ function arial() {
     document.getElementById("textarea1").style.fontFamily = "Arial";
 }
 
+//"save" function
 function save() {
     var text={content: document.getElementById("textarea1").value,
               title: document.getElementById("title").value};
-    //text["content"] = "a";
-    //document.getElementById("abc").innerHTML = text["content"];
-    //text["content"] = document.getElementById("textarea1").innerHTML;
     
     $.getJSON("http://localhost:3000/saveDraft", text, function(data) {
         alert("Your post has been saved.")
     })
 }
 
+//"publish" function
 function publish() {
     var text={content: document.getElementById("textarea1").value,
               title: document.getElementById("title").value};
-    
-    save();
-
+              
     $.getJSON("http://localhost:3000/publishPost", text, function(data) {
         alert("Your post has been published.")
     })

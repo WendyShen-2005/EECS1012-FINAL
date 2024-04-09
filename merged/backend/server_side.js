@@ -304,30 +304,31 @@ app.post('/api/login', async (req, res) => {
 
 //Quynh's
 // create a json file
-var objStart = {
+
+/*var objStart = {
         table: []
-    };
+    };*/
 
 // save the draft post into draftList.json
 app.get('/saveDraft', (req, res) => {
     //console.log(req.query);
   
     var postProperty = {
-        content : req.query["content"],
         title : req.query["title"],
+        content : req.query["content"],
         public : false
     };
     try {
-        fs.readFile('profiles-list.json', "utf8", function readFileCallback(err, data) {
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
             if (err) {throw err;}
             else {
-                objStart = JSON.parse(data); //now it is a list
+                var objStart = JSON.parse(data); //now it is a list
                 //console.log(data);
-                objStart[0]["post"] = postProperty; //add some data
-                json = JSON.stringify(objStart); //convert it back to json
-                fs.writeFile('profiles-list.json', json, 'utf8', function (err) {
+                objStart["postDetails"].push(postProperty); //add some data
+                json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+                fs.writeFile('database.json', json, 'utf8', function (err) {
                     if (err) throw err;
-                    console.log('Append "post" profiles-list.json file on server.');
+                    console.log('Append new post database.json file on server.');
                 });    
             } 
         });    
@@ -342,26 +343,21 @@ app.get('/saveDraft', (req, res) => {
 
 app.get('/publishPost', (req, res) => {
     var postProperty = {
-        content : req.query["content"],
         title : req.query["title"],
-        public : "false"
+        content : req.query["content"],
+        public : true
     };
     try {
-        fs.readFile('profiles-list.json', "utf8", function readFileCallback(err, data) {
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
             if (err) {throw err;}
             else {
-                postProperty["public"] = "true";
-                objStart = JSON.parse(data); //now it is a list
-                objStart[0]["post"] = postProperty; //add some data
-                json = JSON.stringify(objStart); //convert it back to json
-                fs.writeFile('profiles-list.json', json, 'utf8', function (err) {
+                var objStart = JSON.parse(data); //now it is a list
+                objStart["postDetails"].push(postProperty); //add some data
+                json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+                fs.writeFile('database.json', json, 'utf8', function (err) {
                     if (err) throw err;
-                    console.log('Change public to true');
+                    console.log('Save and change public to true');
                 });   
-            }
-            
-            if (postProperty["public"] == "true") {
-                
             }
         });    
     } catch (err) {
@@ -375,22 +371,21 @@ app.get('/publishPost', (req, res) => {
 
 //push info into contact.json
 app.get('/saveContact', (req, res) => {
-    console.log(req.query);
 
-    var obj = {username: req.query["username"],
+    var contactInfo = {username: req.query["username"],
                email: req.query["email"],
                description: req.query["description"]};
 
     try { 
-        fs.readFile('contactList.json', "utf8", function readFileCallback(err, data) {
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
             if (err) {throw err;} 
             else {
-            objStart = JSON.parse(data); //now it an object
-            objStart.table.push(obj); //add some data
-            json = JSON.stringify(objStart); //convert it back to json
-            fs.writeFile('contactList.json', json, 'utf8', function (err) {
+            var objStart = JSON.parse(data); //now it an object
+            objStart["contactReqs"].push(contactInfo); //add some data
+            json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+            fs.writeFile('database.json', json, 'utf8', function (err) {
                 if (err) throw err;
-                console.log('Append to a json file on server.');
+                console.log('Append contact info to database.json.');
             });    
         } 
             }
@@ -399,9 +394,7 @@ app.get('/saveContact', (req, res) => {
         console.error(err);
     }
     res.setHeader("Access-Control-Allow-Origin", "*") //Allows browser to load return values
-    res.json({
-        output: "Wrote to a file on the server."
-    })
+    res.json({})
 })
 
 app.listen(port, function() {

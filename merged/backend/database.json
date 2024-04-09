@@ -1,27 +1,59 @@
-{"users":[
-    {"username": "test",
-           "password": "123",
-           "loggedIn": "true",
-           "profileSettings": {"bgSetting": "img",
-                                "bgImg": "q2a.jpg",
-                                "bgColor": "dc7979",
-                                "pfp": "calcq3.jpg",
-                                "description": "very sad :(",
-                                "textColor": "000000"
-                            },
-            "posts": [0]
-    }
-],
-"postDetails": [
-    {"title": "Test1",
-     "content": "Hope it works :<",
-     "public": "true"
-    }
-],
-"contactReqs": [
-    {"username": "test",
-    "email": "abc",
-    "description":"very sad too :("
-    }
-]
+{
+    "users": [
+        {
+            "username": "test",
+            "password": "123",
+            "loggedIn": "true",
+            "profileSettings": {
+                "bgSetting": "img",
+                "bgImg": "q2a.jpg",
+                "bgColor": "dc7979",
+                "pfp": "calcq3.jpg",
+                "description": "very sad :(",
+                "textColor": "000000"
+            },
+            "posts": [
+                0
+            ]
+        }
+    ],
+    "postDetails": [
+        {
+            "title": "Test1",
+            "content": "Hope it works :<",
+            "public": "true"
+        },
+        {
+            "title": "ABC1",
+            "content": "Hello",
+            "public": false
+        },
+        {
+            "title": "ABC2",
+            "content": "Whats up? :<",
+            "public": true
+        },
+        {
+            "title": "ABC2",
+            "content": "Whats up? :<jnjkhsjjs",
+            "public": true
+        },
+        {
+            "title": "ABC2",
+            "content": "Whats up? :<jnjkhsjjs",
+            "public": true
+        }
+    ],
+    "contactReqs": [
+        {
+            "username": "test",
+            "email": "abc",
+            "description": "very sad too :("
+        },
+        {
+            "username": "bob",
+            "email": "tracy",
+            "description": "haha"
+        }
+    ]
 }
