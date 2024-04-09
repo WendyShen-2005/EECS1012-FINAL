@@ -1,0 +1,27 @@
+{"users":[
+    {"username": "test",
+           "password": "123",
+           "loggedIn": "true",
+           "profileSettings": {"bgSetting": "img",
+                                "bgImg": "q2a.jpg",
+                                "bgColor": "dc7979",
+                                "pfp": "calcq3.jpg",
+                                "description": "very sad :(",
+                                "textColor": "000000"
+                            },
+            "posts": [0]
+    }
+],
+"postDetails": [
+    {"title": "Test1",
+     "content": "Hope it works :<",
+     "public": "true"
+    }
+],
+"contactReqs": [
+    {"username": "test",
+    "email": "abc",
+    "description":"very sad too :("
+    }
+]
+}
