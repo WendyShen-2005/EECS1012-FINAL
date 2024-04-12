@@ -12,12 +12,8 @@ var user = documentUser;
 var loggedIn = null;
 var settingLoggedIn = false;
 
-
-function loadSavedContent () {
-    $.post(url+'?data='+JSON.stringify({
-        'name':user,
-        'action':'loadSavedContent'
-    }),response);
+const reloadPage = () => {
+    location.reload(true);
 }
 
 //function: variety of functions for DOM loads
@@ -25,25 +21,26 @@ function loadSavedContent () {
 //post conditions: tasks listed below...
 document.addEventListener('DOMContentLoaded', async () => {
     //task 1: find out who's logged in
-    console.log(1)
     await $.post(url+'?data='+JSON.stringify({
         'action':'whosLoggedIn',
-    }),await response);
+    }),response);
 
-    console.log("2")
     //task 2: ensure user does not edit other people's profiles
     if(documentPath.indexOf("profile-editor.html") != -1 && (loggedIn == null || loggedIn == "null" || user != loggedIn)){
         console.log("Access denied.");
         window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html";
     }
     //task 3: send request to refresh styles & images to server
-    loadSavedContent();
+    await $.post(url+'?data='+JSON.stringify({
+        'name':user,
+        'action':'loadSavedContent'
+    }),response);
 
     //task 4: if the user has edited description but has not saved, display the status to the user
     if(documentPath.indexOf("editor") != -1){ //see if we're in the profile editor or just the profile display
         console.log("heyyyyyyyyy")
-        document.getElementById("description").addEventListener("input", () => { //send request to check with backend database
-            $.post(url+'?data='+JSON.stringify({
+        document.getElementById("description").addEventListener("input", async () => { //send request to check with backend database
+            await $.post(url+'?data='+JSON.stringify({
                 'name':user,
                 'action':'checkIfDescSaved',
                 'newDesc':document.getElementById("description").value
@@ -69,6 +66,8 @@ saveBGColor = () => {
         'action':'setBGColor',
         'color':color.substring(1,color.length)
     }),response);
+
+    // location.reload(true);
 }
 
 //function: change & save text color
@@ -85,6 +84,9 @@ console.log("hello")
         'action':'setTextColor',
         'color':hex
     }),response);
+
+    // location.reload(true);
+
 }
 
 //function: change & save background image
@@ -107,6 +109,9 @@ setBgImg = () => {
         'action':'setBgImg',
         'imgName':fileName
     }),response);
+
+    // location.reload(true);
+
 }
 
 //function: change & save profile picture 
@@ -128,6 +133,9 @@ setPFP = () => {
         'action':'setPFP',
         'imgName':fileName
     }),response);
+
+    // location.reload(true);
+
 }
 
 //function: clear profile picture & save preference
@@ -143,6 +151,9 @@ clearPFP = () => {
         'action':'setPFP',
         'imgName':'default.jpg'
     }),response);
+
+    // location.reload(true);
+
 }
 
 //function: save description
@@ -155,6 +166,9 @@ saveDesc = () => {
         'action':'setDesc',
         'desc':document.getElementById("description").value
     }),response);
+
+    // location.reload(true);
+
 }
 
 //function: change text color
@@ -175,15 +189,19 @@ changeTextColor = (hex) => {
     //if in editor mode, do not change description color
     if(documentPath.indexOf("profile-editor.html") != -1)
         document.getElementById("description").style.color = "#000000";
+
+    // location.reload(true);
+
     
 }
 
 //function: recieve response from server & do appropriate action
 //pre conditions: server has sent a response
 //post conditions: client performs appropriate action
-async function response(data, status){
+function response(data, status){
 
     var response = JSON.parse(data);//parse data from server
+    console.log(data)
     //response 1: indicate user preferences have been saved
     switch(response['action']){
         case "saved"://response 1: generic saved statement
@@ -242,14 +260,9 @@ async function response(data, status){
                 document.getElementById("descSaveStatus").style.color = "red";
             }
         case "setLoggedIn"://update whos logged in
-            return new Promise((resolve, reject) => {
-                loggedIn = response['username'];   
-                settingLoggedIn = true;
-                console.log("log in response completed")
-                resolve("log in response complete")
-            })
-            
-            // loggedIn = response['username'];
-            // console.log("1" + loggedIn);
+            loggedIn = response['username'];  
     }
+    return new Promise((resolve, reject) => {
+        resolve("response resolved")
+    })
 }
