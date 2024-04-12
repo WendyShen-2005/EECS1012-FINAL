@@ -200,7 +200,7 @@ app.post('/post', (req, res) => {
                 try {
                     const profiles = JSON.parse(jsonString);//read data
                     const short = profiles.users;
-                    var sendUsername = null;
+                    var sendUsername = "null";
                     for(var i = 0; i < short.length; i++)//find who's logged in
                         if(short[i].loggedIn == "true")
                             sendUsername = short[i].username;
