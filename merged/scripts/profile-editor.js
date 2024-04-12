@@ -8,18 +8,13 @@ const documentUser = documentPath.substring(
     documentPath.lastIndexOf("/")
 );
 
-
 var user = documentUser;
 var loggedIn = null;
+var settingLoggedIn = false;
 
-async function setLoggedIn () {
-    await $.post(url+'?data='+JSON.stringify({
-        'action':'whosLoggedIn',
-    }),response);
-}
 
-async function loadSavedContent () {
-    await $.post(url+'?data='+JSON.stringify({
+function loadSavedContent () {
+    $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'loadSavedContent'
     }),response);
@@ -28,13 +23,16 @@ async function loadSavedContent () {
 //function: variety of functions for DOM loads
 //pre conditions: page has been refreshed
 //post conditions: tasks listed below...
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     //task 1: find out who's logged in
-    setLoggedIn();
+    console.log(1)
+    await $.post(url+'?data='+JSON.stringify({
+        'action':'whosLoggedIn',
+    }),await response);
 
     console.log("2")
     //task 2: ensure user does not edit other people's profiles
-    if(documentPath.indexOf("profile-editor.html") != -1 && (loggedIn == null || user != loggedIn)){
+    if(documentPath.indexOf("profile-editor.html") != -1 && (loggedIn == null || loggedIn == "null" || user != loggedIn)){
         console.log("Access denied.");
         window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html";
     }
@@ -186,7 +184,6 @@ changeTextColor = (hex) => {
 async function response(data, status){
 
     var response = JSON.parse(data);//parse data from server
-console.log("heyyyyy " + JSON.stringify(data))
     //response 1: indicate user preferences have been saved
     switch(response['action']){
         case "saved"://response 1: generic saved statement
@@ -195,22 +192,22 @@ console.log("heyyyyy " + JSON.stringify(data))
             // console.log("Updated styles " + JSON.stringify(response['action']) + " " + status);
 
             if(loggedIn != 'null' && loggedIn != null){
-                console.log(loggedIn != null + "" + loggedIn)
+                console.log("logged in")
                 if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
                     document.getElementById("my-profile").style.display = "default";
-                    document.getElementById("my-profile").innerHTML = `${loggedIn}'s profile`;
+                    document.getElementById("my-profile").innerHTML = `Edit ${loggedIn}'s profile`;
                     document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile-editor.html`
                 } else {
                     document.getElementById("my-profile").style.display = "default";
+                    document.getElementById("my-profile").innerHTML = `View ${loggedIn}'s profile`;
                     document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
                 }
                 document.getElementById("login-logout").innerHTML = "Log out";
                 // document.getElementById("login-logout").href = "";
                 // document.getElementById("login-logout").onclick = logOut;
                 document.getElementById("account-settings").style.display = "default";
-                console.log(loggedIn)
             } else {
-                console.log("hello")
+                console.log("not logged in")
                 document.getElementById("my-profile").style.display = "none";
                 document.getElementById("account-settings").style.display = "none";
                 document.getElementById("login-logout").innerHTML = "Log in";
@@ -240,12 +237,19 @@ console.log("heyyyyy " + JSON.stringify(data))
                 document.getElementById("descSaveStatus").style.color = "green";
             }
         case "descNotSaved"://response 4: display if description is not saved
-        if(loggedIn == user && documentPath.indexOf("editor") != -1){
-            document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
-            document.getElementById("descSaveStatus").style.color = "red";
-        }
+            if(loggedIn == user && documentPath.indexOf("editor") != -1){
+                document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
+                document.getElementById("descSaveStatus").style.color = "red";
+            }
         case "setLoggedIn"://update whos logged in
-            loggedIn = response['username'];
-            console.log("1" + loggedIn);
-        }
+            return new Promise((resolve, reject) => {
+                loggedIn = response['username'];   
+                settingLoggedIn = true;
+                console.log("log in response completed")
+                resolve("log in response complete")
+            })
+            
+            // loggedIn = response['username'];
+            // console.log("1" + loggedIn);
+    }
 }
