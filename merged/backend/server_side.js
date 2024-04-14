@@ -219,6 +219,24 @@ app.post('/post', (req, res) => {
                 }
             })
             return;
+        case 'listProfiles':
+            console.log("searching profiles")
+            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
+                errPrint(err);//handle errors
+                try {
+                    const profiles = JSON.parse(jsonString);//read data
+                    const short = profiles.users;
+                    
+                    //send data
+                    res.send(JSON.stringify({
+                        'action':'profilesList',
+                        'data':short
+                    }))
+                } catch(err){//handle errors
+                    console.log(err);
+                }
+            })
+            return;
 
     }            
 })
