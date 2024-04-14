@@ -1,0 +1,14 @@
+body {
+    text-align: center;
+}
+#profiles {
+    background-color: rgb(184, 184, 184);
+    margin: 25px;
+    padding: 30px;
+}
+h1 {
+    margin: 10px;
+}
+p:hover {
+    text-decoration: underline;
+}
