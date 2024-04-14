@@ -4,6 +4,7 @@
             "username": "test",
             "password": "123",
             "loggedIn": "true",
+            "viewingProfile": "true",
             "profileSettings": {
                 "bgSetting": "img",
                 "bgImg": "q2a.jpg",
