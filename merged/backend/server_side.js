@@ -206,10 +206,6 @@ app.post('/post', (req, res) => {
                             sendUsername = short[i].username;
 
                     //send data
-                    console.log(JSON.stringify({
-                        'action':'setLoggedIn',
-                        'username':sendUsername
-                    }))
                     res.send(JSON.stringify({
                         'action':'setLoggedIn',
                         'username':sendUsername
@@ -237,7 +233,47 @@ app.post('/post', (req, res) => {
                 }
             })
             return;
+        case 'whosPage'://see who's profile we're viewing
+            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
+                errPrint(err);//handle errors
+                try {
+                    const profiles = JSON.parse(jsonString);//read data
+                    const short = profiles.users;
+                    var sendUsername = "null";
+                    for(var i = 0; i < short.length; i++)//find who's logged in
+                        if(short[i].viewingProfile == "true")
+                            sendUsername = short[i].username;
 
+                    //send data
+                    res.send(JSON.stringify({
+                        'action':'setPage',
+                        'username':sendUsername
+                    }))
+                } catch(err){//handle errors
+                    console.log(err);
+                }
+            })
+            return;
+        case 'setViewingProfile'://set whos profile we're viewing
+            console.log("set viewing profile " + queryInfo)
+            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
+                errPrint(err);//handle errors
+                try {
+                    const profiles = JSON.parse(jsonString);//parse user data JSON
+                    const short = profiles.users;
+                    for(var i = 0; i < short.length; i++){//find correct user
+                        console.log(short[i].username + " " + queryInfo['name']);
+                        if(short[i].username == queryInfo['name'])
+                            short[i].viewingProfile = "true";//save whos profile we're viewing
+                        else
+                            short[i].viewingProfile = "false";}
+                    fileWriter(profiles);//write updated JSON to user data
+                } catch(err){//handle errors
+                    console.log(err);
+                }
+            })
+            saved(res);//send saved response to client
+            return;
     }            
 })
 
