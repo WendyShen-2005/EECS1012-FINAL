@@ -2,13 +2,14 @@ var url = "http://localhost:3000/post";//server url
 
 const documentPath =  window.location.href;//get url of page we're working with
 
-//figuring out which user we're working with
-const documentUser = documentPath.substring(
-    documentPath.lastIndexOf("users/") + 6, 
-    documentPath.lastIndexOf("/")
-);
+//figuring out which user's page we're on with
+// var documentUser = documentPath.substring(
+//     documentPath.lastIndexOf("users/") + 6, 
+//     documentPath.lastIndexOf("/")
+// );
+var whosPage;
 
-var user = documentUser;
+var user;
 var loggedIn = null;
 var settingLoggedIn = false;
 
@@ -20,23 +21,31 @@ const reloadPage = () => {
 //pre conditions: page has been refreshed
 //post conditions: tasks listed below...
 document.addEventListener('DOMContentLoaded', async () => {
-    //task 1: find out who's logged in
+    //find out who's page we're on
+    await $.post(url+'?data='+JSON.stringify({
+        'action':'whosPage',
+    }),response);
+    user = whosPage;
+
+    console.log(whosPage)
+    
+    //find out who's logged in
     await $.post(url+'?data='+JSON.stringify({
         'action':'whosLoggedIn',
     }),response);
 
-    //task 2: ensure user does not edit other people's profiles
+    //ensure user does not edit other people's profiles
     if(documentPath.indexOf("profile-editor.html") != -1 && (loggedIn == null || loggedIn == "null" || user != loggedIn)){
         console.log("Access denied.");
         window.location.href = documentPath.substring(0, documentPath.lastIndexOf('/') + 1) + "profile.html";
     }
-    //task 3: send request to refresh styles & images to server
+    //send request to refresh styles & images to server
     await $.post(url+'?data='+JSON.stringify({
         'name':user,
         'action':'loadSavedContent'
     }),response);
 
-    //task 4: if the user has edited description but has not saved, display the status to the user
+    //if the user has edited description but has not saved, display the status to the user
     if(documentPath.indexOf("editor") != -1){ //see if we're in the profile editor or just the profile display
         console.log("heyyyyyyyyy")
         document.getElementById("description").addEventListener("input", async () => { //send request to check with backend database
@@ -220,7 +229,7 @@ function response(data, status){
                     document.getElementById("my-profile").innerHTML = `View ${loggedIn}'s profile`;
                     document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
                 }
-                document.getElementById("login-logout").innerHTML = "Log out";
+                // document.getElementById("login-logout").innerHTML = "Log out";
                 // document.getElementById("login-logout").href = "";
                 // document.getElementById("login-logout").onclick = logOut;
                 document.getElementById("account-settings").style.display = "default";
@@ -261,6 +270,8 @@ function response(data, status){
             }
         case "setLoggedIn"://update whos logged in
             loggedIn = response['username'];  
+        case "setPage":
+            whosPage = response['username'];
     }
     return new Promise((resolve, reject) => {
         resolve("response resolved")
