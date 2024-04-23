@@ -12,12 +12,12 @@
     </head>
     <body>
         <div class="navbar">
-            <a class="navbar-button" href="home.html">Home</a>
+            <a class="navbar-button" href="../../../EECS1012-FINAL-quynh-branch/home.html">Home</a>
             <div>
-                <a class="navbar-button" id="my-profile">My profile</a>
+                <a class="navbar-button" id="my-profile">View my profile</a>
                 <a class="navbar-button" href="" id="account-settings">Account Settings</a>
-                <a class="navbar-button" href="contact.html">Contact Us</a>
-                <a class="navbar-button" onclick="logOut()" href="signUp.html" id="login-logout">Log out</a>
+                <a class="navbar-button" href="../../frontend/contact.html">Contact Us</a>
+                <a class="navbar-button" onclick="logOut()" href="../../frontend/signUp.html" id="login-logout">Log out</a>
             </div>
         </div> <!-- nav bar end-->
 
@@ -32,18 +32,18 @@
                 <div>
                     <label>Background Color: </label>
                     <input type="color" id="color-picker">
-                    <button onclick="saveBGColor()">Set background color</button>
+                    <button onclick="saveBGColor(); reloadPage()">Set background color</button>
                 </div>
                 <form target="_blank" action="http://localhost:3000/api/upload/bgImg" enctype="multipart/form-data" method="post">
                     <label for="bgImg">Background Image: </label>
                     <input type="file" name="bgImg" id="bgImg" accept="image/*">
                     <button type="submit">Upload</button>
-                    <button onclick="setBgImg()">Set Image</button>
+                    <button onclick="setBgImg(); reloadPage()">Set Image</button>
                 </form>
                 <div>
                     <label>Text color</label>
                     <input type="color" id="text-color-picker">
-                    <button onclick="saveTextColor()">Set text color</button>
+                    <button onclick="saveTextColor(); reloadPage()">Set text color</button>
                 </div>
             </div><!--background editor end-->
 
@@ -55,8 +55,8 @@
                     <label for="pfp">Change profile picture:</label>
                     <input type="file" name="pfp" id="pfp" accept="image/*">
                     <button type="submit">Upload</button>
-                    <button onclick="setPFP()">Set Image</button>
-                    <button onclick="clearPFP()">Clear Image</button>
+                    <button onclick="setPFP(); reloadPage()">Set Image</button>
+                    <button onclick="clearPFP(); reloadPage()">Clear Image</button>
                 </form>
             </div><!--profile picture editor end-->
 
@@ -80,7 +80,7 @@
     Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
                 </textarea>
                 <div>
-                    <button onclick="saveDesc()">Save</button>
+                    <button onclick="saveDesc(); reloadPage()">Save</button>
                     <br/><br/>
                     <p id="descSaveStatus">Status: Saved</p>
                 </div>
