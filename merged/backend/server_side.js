@@ -1,15 +1,16 @@
 const express = require("express");
 const path = require('path');
 const morgan = require('morgan');
-const app = express();
 const multer = require('multer');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const bcrypt = require('bcryptjs');
 
 const fs = require("fs");
 
 const port = 3000;
+
+const app = express();
+const bcrypt = require('bcryptjs');
 
 require('dotenv').config();
 //Wendy's
@@ -24,7 +25,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({storage});
+const upload = multer({storage: storage});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -50,231 +51,141 @@ app.post('/post', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");//give appropriate access
     var queryInfo = JSON.parse(req.query['data']);//parse request data
 
-    switch(queryInfo['action']){
-        case "setBgImg"://saving background image setting
-            console.log("set bg img")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name']){
-                            short[i].profileSettings.bgSetting = "img";//set bg preference to img
-                            short[i].profileSettings.bgImg = queryInfo['imgName'];//save bg img file name
-                        }
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-        case 'setBGColor'://saving background color
-            console.log("set bg color")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name']){
-                            short[i].profileSettings.bgSetting = "color";//set bg preference to color
-                            short[i].profileSettings.bgColor = queryInfo['color'];//save bg color
-                        }
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-        case 'setPFP'://saving profile picture
-            console.log("set pfp")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name'])
-                            short[i].profileSettings.pfp = queryInfo['imgName'];//save pfp img file
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-        case 'setDesc'://saving description
-            console.log("set desc")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name'])
-                            short[i].profileSettings.description = queryInfo['desc'];//save new description
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-        case 'loadSavedContent'://load in saved profile settings
-            console.log("load saved content")
-            var userData = '{"action":"updateProfile",';//start JSON response
+    //request 1: save bg img
+    if(queryInfo['action'] == 'setBgImg'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name']){
+                        profiles[i].bgSetting = "img";//set bg preference to img
+                        profiles[i].bgImg = queryInfo['imgName'];//save bg img file name
+                    }
+                fileWriter(profiles);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client
+    //request 2: save bg color
+    } else if(queryInfo['action'] == 'setBGColor'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name']){
+                        profiles[i].bgSetting = "color";//set bg preference to color
+                        profiles[i].bgColor = queryInfo['color'];//save bg color
+                    }
+                fileWriter(profiles);//write updated JSON to user data
+                console.log(profiles)
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client
 
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name']){
-                            console.log("sending user data...");
-                            const short1 = short[i].profileSettings;
-                            //all user profile data
-                            userData +=`"bgSetting":"${short1.bgSetting}",`;
-                            userData +=`"bgColor":"${short1.bgColor}",`;
-                            userData +=`"bgImg":"${short1.bgImg}",`;
-                            userData +=`"pfp":"${short1.pfp}",`;
-                            userData +=`"description":"${short1.description}",`;
-                            userData +=`"textColor":"${short1.textColor}"}`;
-                        }
-                    console.log(userData);
-                    console.log("user data sent.");
-                    res.send(userData);
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            return;
-        case 'setTextColor'://save text color
-            console.log("set text color")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name'])
-                            short[i].profileSettings.textColor = queryInfo['color'];//save text color
+    //request 3: save profile picture
+    } else if(queryInfo['action'] == 'setPFP'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name'])
+                        profiles[i].pfp = queryInfo['imgName'];//save pfp img file
+                fileWriter(profiles);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client
     
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-        case 'checkIfDescSaved'://check if description is saved
-            console.log("check if desc saved")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++)//find correct user
-                        if(short[i].username == queryInfo['name'])
-                            if(short[i].profileSettings.description == queryInfo['newDesc'])//if client description matches server description...
-                                res.send(JSON.stringify({//tell client description is saved
-                                    'action':'descSaved'
-                                }))
-                            else //if client description does NOT match server description...
-                                res.send(JSON.stringify({//tell client descriotion has not been saved
-                                    'action':'descNotSaved'
-                                }))
-                    
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            return;
-        case 'whosLoggedIn': //check who's logged in
-            console.log("whos logged in")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//read data
-                    const short = profiles.users;
-                    var sendUsername = "null";
-                    for(var i = 0; i < short.length; i++)//find who's logged in
-                        if(short[i].loggedIn == "true")
-                            sendUsername = short[i].username;
+    //request 4: save description
+    } else if(queryInfo['action'] == 'setDesc'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name'])
+                        profiles[i].description = queryInfo['desc'];//save new description
+                fileWriter(profiles);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client
 
-                    //send data
-                    res.send(JSON.stringify({
-                        'action':'setLoggedIn',
-                        'username':sendUsername
-                    }))
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            return;
-        case 'listProfiles':
-            console.log("searching profiles")
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//read data
-                    const short = profiles.users;
-                    
-                    //send data
-                    res.send(JSON.stringify({
-                        'action':'profilesList',
-                        'data':short
-                    }))
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            return;
-        case 'whosPage'://see who's profile we're viewing
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//read data
-                    const short = profiles.users;
-                    var sendUsername = "null";
-                    for(var i = 0; i < short.length; i++)//find who's logged in
-                        if(short[i].viewingProfile == "true")
-                            sendUsername = short[i].username;
+    //request 5: send user preferences about profile
+    } else if(queryInfo['action'] == 'loadSavedContent'){
+        var userData = '{"action":"updateProfile", ';//start JSON response
 
-                    //send data
-                    res.send(JSON.stringify({
-                        'action':'setPage',
-                        'username':sendUsername
-                    }))
-                } catch(err){//handle errors
-                    console.log(err);
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++){//find correct user
+                    if(profiles[i].username == queryInfo['name']){
+                        console.log("sending user data...");
+
+                        //all user profile data
+                        userData +=`"bgSetting":"${profiles[i].bgSetting}", `;
+                        userData +=`"bgColor":"${profiles[i].bgColor}", `;
+                        userData +=`"bgImg":"${profiles[i].bgImg}", `;
+                        userData +=`"pfp":"${profiles[i].pfp}", `;
+                        userData +=`"description":"${profiles[i].description}", `;
+                        userData +=`"textColor":"${profiles[i].textColor}"}`;
+                    }
                 }
-            })
-            return;
-        case 'setViewingProfile'://set whos profile we're viewing
-            console.log("set viewing profile " + queryInfo)
-            fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
-                errPrint(err);//handle errors
-                try {
-                    const profiles = JSON.parse(jsonString);//parse user data JSON
-                    const short = profiles.users;
-                    for(var i = 0; i < short.length; i++){//find correct user
-                        console.log(short[i].username + " " + queryInfo['name']);
-                        if(short[i].username == queryInfo['name'])
-                            short[i].viewingProfile = "true";//save whos profile we're viewing
-                        else
-                            short[i].viewingProfile = "false";}
-                    fileWriter(profiles);//write updated JSON to user data
-                } catch(err){//handle errors
-                    console.log(err);
-                }
-            })
-            saved(res);//send saved response to client
-            return;
-    }            
+                console.log("user data sent.");
+                res.send(userData);
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+    
+    //request 6: save text color
+    } else if(queryInfo['action'] == 'setTextColor'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name'])
+                        profiles[i].textColor = queryInfo['color'];//save text color
+
+                fileWriter(profiles);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client
+
+    //request 7: check if description has been saved
+    } else if(queryInfo['action'] == 'checkIfDescSaved'){
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
+            errPrint(err);//handle errors
+            try {
+                var profiles = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < profiles.length; i++)//find correct user
+                    if(profiles[i].username == queryInfo['name'])
+                        if(profiles[i].description == queryInfo['newDesc'])//if client description matches server description...
+                            res.send(JSON.stringify({//tell client description is saved
+                                'action':'descSaved'
+                            }))
+                        else //if client description does NOT match server description...
+                            res.send(JSON.stringify({//tell client descriotion has not been saved
+                                'action':'descNotSaved'
+                            }))
+                
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+    }
 })
 
 //function: generic saved response
@@ -292,9 +203,9 @@ saved = (res) => {
 //pre conditions: data has been modified
 //post conditions: update database
 fileWriter = (profiles) => {
-    // console.log("filewriter: " + JSON.stringify(profiles))
     profiles = JSON.stringify(profiles, null, 2);
-    fs.writeFile('./database.json', profiles, err => {
+        
+    fs.writeFile('./profiles-list.json', profiles, err => {
         if(err) {//handle errors
             console.log(err);
         }
@@ -430,7 +341,7 @@ app.get('/saveDraft', (req, res) => {
         output: "Wrote to a file on the server."
     })
 })
-
+// save public status of post
 app.get('/publishPost', (req, res) => {
     var postProperty = {
         title : req.query["title"],
@@ -490,3 +401,36 @@ app.get('/saveContact', (req, res) => {
 app.listen(port, function() {
     console.log(`Listening on port ${port}`)
 })
+
+
+// get uploaded background image
+app.post('/api/upload/imgUpload', upload.single('imgUpload'), (req, res) => {
+    res.send("Picture uploaded successfully (close this tab)");
+});
+
+app.post('/post1', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");//give appropriate access
+    var queryInfo = JSON.parse(req.query['data']);//parse request data
+
+    //request 1: save bg img
+    if(queryInfo['action'] == 'loadBgImg') {
+        fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
+            console.log(JSON.parse(jsonString))
+            errPrint(err);//handle errors
+            try {
+                var data = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < data.users.length; i++)//find correct user
+                    if(data.users[i].username == queryInfo['name']){
+                        //profiles[i].bgSetting = "img";//set bg preference to img
+                        data.users[i].pageSettings.bgImg = queryInfo['imgName'];//save bg img file name
+                    }
+                fileWriter(data);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client*/
+    //request 2: save bg color
+    }
+});
+
