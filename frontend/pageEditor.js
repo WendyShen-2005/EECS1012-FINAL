@@ -1,5 +1,6 @@
 var url="https://kit.fontawesome.com/2a5e0b1595.js";
 
+// load font
 function loadScript() {    
     var head = document.getElementsByTagName('head')[0];
     var script = document.createElement('script');
@@ -8,32 +9,39 @@ function loadScript() {
     script.crossOrigin = "anonymous";
     head.appendChild(script);
 }
+
+//functions to format bold, italic and underlined text
 function bold() {
-    document.getElementById("textarea1").style.fontWeight = "bold"; 
-}
-function leftAlign(){
-    document.getElementById("textarea1").style.textAlign = "left";
-}
-function centerAlign(){
-    document.getElementById("textarea1").style.textAlign = "center";
-}
-function rightAlign(){
-    document.getElementById("textarea1").style.textAlign = "right";
-}
-function justifyAlign() {
-    document.getElementById("textarea1").style.textAlign = "justify";
-    document.getElementById("textarea1").style.textJustify = "inter-word";
+    document.execCommand("bold");
 }
 function italic() {
-    document.getElementById("textarea1").style.fontStyle = "italic";
+    document.execCommand("italic");
 }
 function underline() {
-    document.getElementById("textarea1").style.textDecoration = "underline";
+    document.execCommand("underline");
 }
+
+//functions to align text
+function leftAlign(){
+    document.getElementById("textbox").style.textAlign = "left";
+}
+function centerAlign(){
+    document.getElementById("textbox").style.textAlign = "center";
+}
+function rightAlign(){
+    document.getElementById("textbox").style.textAlign = "right";
+}
+function justifyAlign() {
+    document.getElementById("textbox").style.textAlign = "justify";
+    document.getElementById("textbox").style.textJustify = "inter-word";
+}
+
+//function to change text's font
+//create a dropdown bar to select fonts
 function dropdown() {
     document.getElementById("myDropdown").classList.toggle("show");
-  }
-  // Close the dropdown menu if the user clicks outside of it
+}
+//close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
 if (!event.target.matches('.btnFontChange')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
@@ -46,41 +54,65 @@ if (!event.target.matches('.btnFontChange')) {
     }
 }
 } 
-
+//change font size
 function times() {
-    document.getElementById("textarea1").style.fontFamily = "Times New Roman";
+    document.getElementById("textbox").style.fontFamily = "Times New Roman";
 }
 function georgia() {
-    document.getElementById("textarea1").style.fontFamily = "Georgia";
+    document.getElementById("textbox").style.fontFamily = "Georgia";
 }
 function garamond() {
-    document.getElementById("textarea1").style.fontFamily = "Garamond";
+    document.getElementById("textbox").style.fontFamily = "Garamond";
 }
 function arial() {
-    document.getElementById("textarea1").style.fontFamily = "Arial";
+    document.getElementById("textbox").style.fontFamily = "Arial";
 }
 
+//function to change background image
+//function to change image
+function loadBgImg() {
+    var imgFileName = document.getElementById("imgUpload").value;
+    imgFileName = imgFileName.substring(imgFileName.lastIndexOf("\\")+1, imgFileName.length)
+    var path = "../images/";
+    path = path + imgFileName;
+    var str = "url(../images/" + imgFileName +")";
+
+    document.body.style.backgroundImage = str;
+
+    var text = {
+        'name':user,
+        'action':'loadBgImg',
+        'imgName': imgFileName
+    }
+    //send change image request with the chosen image to server
+    $.post("http://localhost:3000/post1" +"?data="+JSON.stringify({
+        'name':user,
+        'action':'loadBgImg',
+        'imgName':imgFileName
+    }), response);
+
+    
+}
+
+//"save" function
 function save() {
     var text={content: document.getElementById("textarea1").value,
               title: document.getElementById("title").value};
-    //text["content"] = "a";
-    //document.getElementById("abc").innerHTML = text["content"];
-    //text["content"] = document.getElementById("textarea1").innerHTML;
-    
+    //send data to server
     $.getJSON("http://localhost:3000/saveDraft", text, function(data) {
         alert("Your post has been saved.")
     })
 }
 
+//"publish" function
 function publish() {
     var text={content: document.getElementById("textarea1").value,
               title: document.getElementById("title").value};
-    
-    save();
-
+    //send data to server
     $.getJSON("http://localhost:3000/publishPost", text, function(data) {
         alert("Your post has been published.")
     })
 
 }
+
 

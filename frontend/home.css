@@ -7,6 +7,9 @@
     background-color: #000000;
     overflow: hidden;
 }
+body {
+    background-image: url("images/p5.jpg");
+}
 a.general {
     float: left;
     color: #d4d0d0;
@@ -15,17 +18,31 @@ a.general {
     text-decoration: none;
     font-size: 17px;
 }
+a.general:hover {
+    text-decoration: underline;
+    transition: all 0.5s ease;
+    color: #ffffff
+}
 a.personal {
     float: right;
-    color: #d4d0d0;
+    color: #dddddd;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
 }
+a.personal:hover {
+    text-decoration: underline;
+    transition: all 0.5s ease;
+    color: #ffffff
+}
 body {
     height: 100%;
     font-family: 'Times New Roman', Times, serif;
+}
+p {
+    color: #dddddd;
+    text-shadow: 1px 1px #000000;
 }
 .header {
     text-align: center;
@@ -34,9 +51,10 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
+    border: none;
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
-    background-color: #d4d0d0;
+    background-color: #dddddd;
     font-size: 20px;
     font-family:Georgia, 'Times New Roman', Times, serif;
     padding: 16px 30px;
@@ -47,7 +65,7 @@ body {
   }
   .header .btn:hover {
     background-color: black;
-    color: #d4d0d0;
+    color: #dddddd;
   }
   .header .content {
     font-size: 5em;
