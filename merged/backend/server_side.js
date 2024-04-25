@@ -405,6 +405,7 @@ app.listen(port, function() {
 
 // get uploaded background image
 app.post('/api/upload/imgUpload', upload.single('imgUpload'), (req, res) => {
+    //res.header("Access-Control-Allow-Origin", "*");
     res.send("Picture uploaded successfully (close this tab)");
 });
 
@@ -433,4 +434,3 @@ app.post('/post1', (req, res) => {
     //request 2: save bg color
     }
 });
-
