@@ -74,9 +74,75 @@ p {
     position: absolute;
     top: 30%;
     left: 50%;
-    /*margin-left: 5%;
-    margin-right: 5%;
-    text-align: center;*/
     transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
   }
+
+  .AuthForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 200px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px; /
+  }
+
+  .InputField {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .SubmitButton {
+    width: 95%;
+    padding: 10px;
+    font-size: 20px;
+    color: white;
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+/* General.html setting*/
+.Group10 {
+    width: 30vw;
+    height: 300px;
+    margin: auto;
+    position: absolute;
+    top: 40vh;
+    left: 35vw;
+  }
+.custom {
+    width: 100%;
+}
+.Setting {
+    width: 1280px;
+    height: 1500px;
+    position: relative;
+    background: white;
+}
+
+.Group10 button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #F0EEEE;
+    color: #000;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+  }
+  
+  .Group10 button:hover {
+    background-color: #E6E6E6;
+  }
+
+  

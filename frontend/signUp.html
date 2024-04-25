@@ -4,34 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
     <script src="signUp.js" defer></script>
  <!-- Add 'defer' attribute to ensure script executes after DOM content is loaded -->
 </head>
 <body>
-    <div class="SignUp">
+    <!--<div class="SignUp">
         <div class="Group7">
             <div class="Rectangle4"></div>
             <a href="General.html"><button class="Home">General</button></a>
             <button id="showLoginBtn" class="AuthOption">Login</button>
             <button id="showSignupBtn" class="AuthOption">Sign Up</button>
-        </div>
+        </div>-->
+        <nav class="navbar">
+            <a href="home.html" class="general" id="home"> Home </a>
+            <a href="logIn.html" class= "personal" id="signup"> Log in</a>
+            <a href="General.html" class= "general" id="general"> General</a>
+            <a href="contact.html" class="general" id="contact"> Contact Us </a>
+        </nav>
 <!-- Sign Up Form -->
-<form id="SignUpForm" class="AuthForm" style="display:none;">
+<form id="SignUpForm" class="AuthForm" style="display:block;">
     <input type="text" id="signupUsername" class="InputField" placeholder="Create a username" required />
     <input type="password" id="signupPassword" class="InputField" placeholder="Create a password" required />
     <button class="SubmitButton" type="submit">Sign Up</button>
 </form>
-
-<!-- Login Form -->
-<form id="LoginForm" class="AuthForm" style="display:none;">
-    <input type="text" id="loginUsername" class="InputField" placeholder="Username" required />
-    <input type="password" id="loginPassword" class="InputField" placeholder="Password" required />
-    <button class="SubmitButton" type="submit">Login</button>
-</form>
-
-
     </div>
-    <div id="bob"> </div>
 </body>
 </html>
