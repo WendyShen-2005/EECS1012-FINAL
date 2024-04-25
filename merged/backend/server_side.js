@@ -1,20 +1,31 @@
-//server dependencies & set up stuff
-const express = require('express');
-const fs = require("fs");
+const express = require("express");
+const path = require('path');
+const morgan = require('morgan');
 const multer = require('multer');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
+const fs = require("fs");
+
+const port = 3000;
+
 const app = express();
+const bcrypt = require('bcryptjs');
+
+require('dotenv').config();
+//Wendy's
 
 //tell server where to save images
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null, 'images');
+        cb(null, '../images'); // Destination folder for uploaded files
     },
-    filename: function(req, file, cb){
+    filename: function(req, file, cb){ //Rename file
         cb(null, file.originalname);
     }
 })
 
-const upload = multer({storage});
+const upload = multer({storage: storage});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,7 +53,7 @@ app.post('/post', (req, res) => {
 
     //request 1: save bg img
     if(queryInfo['action'] == 'setBgImg'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -59,7 +70,7 @@ app.post('/post', (req, res) => {
         saved(res);//send saved response to client
     //request 2: save bg color
     } else if(queryInfo['action'] == 'setBGColor'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -78,7 +89,7 @@ app.post('/post', (req, res) => {
 
     //request 3: save profile picture
     } else if(queryInfo['action'] == 'setPFP'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -94,7 +105,7 @@ app.post('/post', (req, res) => {
     
     //request 4: save description
     } else if(queryInfo['action'] == 'setDesc'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -112,7 +123,7 @@ app.post('/post', (req, res) => {
     } else if(queryInfo['action'] == 'loadSavedContent'){
         var userData = '{"action":"updateProfile", ';//start JSON response
 
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -138,7 +149,7 @@ app.post('/post', (req, res) => {
     
     //request 6: save text color
     } else if(queryInfo['action'] == 'setTextColor'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -155,7 +166,7 @@ app.post('/post', (req, res) => {
 
     //request 7: check if description has been saved
     } else if(queryInfo['action'] == 'checkIfDescSaved'){
-        fs.readFile('./backend/profiles-list.json', 'utf-8', (err, jsonString) => {
+        fs.readFile('./profiles-list.json', 'utf-8', (err, jsonString) => {
             errPrint(err);//handle errors
             try {
                 var profiles = JSON.parse(jsonString);//parse user data JSON
@@ -177,13 +188,6 @@ app.post('/post', (req, res) => {
     }
 })
 
-// function: Start the server
-//pre conditions: sent start server request in terminal
-//post conditions: start server
-app.listen(3000, () => {
-    console.log("Listening on port 3000");
-});
-
 //function: generic saved response
 //pre conditions: user data has been updated
 //post conditions: send client response that data has been saved
@@ -201,7 +205,7 @@ saved = (res) => {
 fileWriter = (profiles) => {
     profiles = JSON.stringify(profiles, null, 2);
         
-    fs.writeFile('./backend/profiles-list.json', profiles, err => {
+    fs.writeFile('./profiles-list.json', profiles, err => {
         if(err) {//handle errors
             console.log(err);
         }
@@ -215,3 +219,218 @@ errPrint = (err) => {
     if(err)
         console.log(err);
 }
+
+//Mia's
+// Simulated in-memory 'database'
+const usersDb = {};
+
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
+
+// User registration
+app.post('/api/signup', async (req, res) => {
+    const { username, email, password } = req.body;
+  
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required.' });
+    }
+  
+    if (usersDb[username]) {
+      return res.status(400).json({ message: 'Username already exists.' });
+    }
+  
+    const hashedPassword = await bcrypt.hash(password, 8);
+    usersDb[username] = { email, password: hashedPassword };
+  
+    res.json({ message: 'Signup successful.' });
+  });
+
+  // User login
+app.post('/api/login', async (req, res) => {
+    const { username, password } = req.body;
+    const user = usersDb[username];
+  
+    if (!user) {
+      return res.status(400).json({ message: 'User does not exist.' });
+    }
+  
+    const isMatch = await bcrypt.compare(password, user.password);
+  
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Invalid credentials.' });
+    }
+  
+    // Assuming successful login
+    req.session.username = username; // Save username in session
+    res.json({ message: 'Login successful.' });
+  });
+  
+  // Retrieve current user settings
+  app.get('/api/settings', (req, res) => {
+    const { username } = req.session;
+    
+    if (!username || !usersDb[username]) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+  
+    const user = usersDb[username];
+    res.json({ username, email: user.email });
+  });
+  
+  // Update user settings
+  app.post('/api/updateSettings', async (req, res) => {
+    const { username } = req.session;
+    const { email, password } = req.body;
+  
+    if (!username || !usersDb[username]) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+  
+    if (email) {
+      usersDb[username].email = email;
+    }
+    
+    if (password) {
+      usersDb[username].password = await bcrypt.hash(password, 8);
+    }
+  
+    res.json({ message: 'Settings updated successfully.' });
+  });
+
+//Quynh's
+// create a json file
+
+/*var objStart = {
+        table: []
+    };*/
+
+// save the draft post into draftList.json
+app.get('/saveDraft', (req, res) => {
+    //console.log(req.query);
+  
+    var postProperty = {
+        title : req.query["title"],
+        content : req.query["content"],
+        public : false
+    };
+    try {
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
+            if (err) {throw err;}
+            else {
+                var objStart = JSON.parse(data); //now it is a list
+                //console.log(data);
+                objStart["postDetails"].push(postProperty); //add some data
+                json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+                fs.writeFile('database.json', json, 'utf8', function (err) {
+                    if (err) throw err;
+                    console.log('Append new post database.json file on server.');
+                });    
+            } 
+        });    
+    } catch (err) {
+        console.error(err);
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*") //Allows browser to load return values
+    res.json({
+        output: "Wrote to a file on the server."
+    })
+})
+// save public status of post
+app.get('/publishPost', (req, res) => {
+    var postProperty = {
+        title : req.query["title"],
+        content : req.query["content"],
+        public : true
+    };
+    try {
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
+            if (err) {throw err;}
+            else {
+                var objStart = JSON.parse(data); //now it is a list
+                objStart["postDetails"].push(postProperty); //add some data
+                json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+                fs.writeFile('database.json', json, 'utf8', function (err) {
+                    if (err) throw err;
+                    console.log('Save and change public to true');
+                });   
+            }
+        });    
+    } catch (err) {
+        console.error(err);
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*") //Allows browser to load return values
+    res.json({
+        output: "Wrote to a file on the server."
+    })
+})
+
+//push info into contact.json
+app.get('/saveContact', (req, res) => {
+
+    var contactInfo = {username: req.query["username"],
+               email: req.query["email"],
+               description: req.query["description"]};
+
+    try { 
+        fs.readFile('database.json', "utf8", function readFileCallback(err, data) {
+            if (err) {throw err;} 
+            else {
+            var objStart = JSON.parse(data); //now it an object
+            objStart["contactReqs"].push(contactInfo); //add some data
+            json = JSON.stringify(objStart, undefined, 4); //convert it back to json
+            fs.writeFile('database.json', json, 'utf8', function (err) {
+                if (err) throw err;
+                console.log('Append contact info to database.json.');
+            });    
+        } 
+            }
+        );}
+    catch (err) {
+        console.error(err);
+    }
+    res.setHeader("Access-Control-Allow-Origin", "*") //Allows browser to load return values
+    res.json({})
+})
+
+app.listen(port, function() {
+    console.log(`Listening on port ${port}`)
+})
+
+
+// get uploaded background image
+app.post('/api/upload/imgUpload', upload.single('imgUpload'), (req, res) => {
+    //res.header("Access-Control-Allow-Origin", "*");
+    res.send("Picture uploaded successfully (close this tab)");
+});
+
+app.post('/post1', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");//give appropriate access
+    var queryInfo = JSON.parse(req.query['data']);//parse request data
+
+    //request 1: save bg img
+    if(queryInfo['action'] == 'loadBgImg') {
+        fs.readFile('./database.json', 'utf-8', (err, jsonString) => {
+            console.log(JSON.parse(jsonString))
+            errPrint(err);//handle errors
+            try {
+                var data = JSON.parse(jsonString);//parse user data JSON
+                for(var i = 0; i < data.users.length; i++)//find correct user
+                    if(data.users[i].username == queryInfo['name']){
+                        //profiles[i].bgSetting = "img";//set bg preference to img
+                        data.users[i].pageSettings.bgImg = queryInfo['imgName'];//save bg img file name
+                    }
+                fileWriter(data);//write updated JSON to user data
+            } catch(err){//handle errors
+                console.log(err);
+            }
+        })
+        saved(res);//send saved response to client*/
+    //request 2: save bg color
+    }
+});
