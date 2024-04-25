@@ -223,64 +223,94 @@ errPrint = (err) => {
 
 //Mia's
 
-
+// Logging middleware for debugging and development, provides concise output of requests.
 app.use(morgan('dev'));
+
+// Middleware to parse JSON payloads, allowing for easy access to request data.
 app.use(express.json());
+
+// Middleware to parse URL-encoded bodies, useful for form submissions.
 app.use(express.urlencoded({ extended: true }));
+
+// Middleware to parse cookies attached to the client request object.
 app.use(cookieParser());
+
+// Session middleware configuration to handle user sessions with security settings.
+// Uses a secret from environment variables for session encryption.
+// Configures cookie security based on the environment (secure in production).
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  resave: false, // don't save session if unmodified
+  saveUninitialized: true, // save uninitialized session to store
+  cookie: { secure: process.env.NODE_ENV === 'production' } // set cookies to secure in production
 }));
 
+// Serve static files such as HTML, CSS, JavaScript from a specified directory.
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+// Configure storage for file uploads using multer, specifying the destination and filename.
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
+    // Save files in the 'frontend/images' directory.
     cb(null, path.join(__dirname, 'frontend/images'));
   },
   filename: (req, file, cb) => {
+    // Rename the uploaded files by appending a timestamp to the original name.
     cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
   }
 });
 
+// Middleware to handle file uploads.
 const upload = multer({ storage });
+
+// Route to handle single file uploads under the 'bgImg' field in a form.
 app.post('/api/upload', upload.single('bgImg'), (req, res) => {
+  // Respond with a JSON object indicating successful upload and file details.
   res.json({ message: 'File uploaded successfully.', file: req.file });
 });
 
+// User registration route.
 app.post('/api/signup', async (req, res) => {
-  console.log(req.body);  // Log incoming data for debugging
+  // Log incoming data for debugging purposes.
+  console.log(req.body);
   const { username, password } = req.body;
 
+  // Validate that username and password are provided.
   if (!username || !password) {
       return res.status(400).json({ message: 'Username and password are required.' });
   }
 
+  // Check if username already exists in the database.
   if (usersDb[username]) {
       return res.status(400).json({ message: 'Username already exists.' });
   }
 
+  // Hash the password using bcrypt and store the user in the database.
   const hashedPassword = await bcrypt.hash(password, 8);
   usersDb[username] = { password: hashedPassword };
 
+  // Respond with a success message.
   res.json({ message: 'Signup successful.', success: true });
 });
 
+// User login route.
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const user = usersDb[username];
+
+  // Check if user exists.
   if (!user) return res.status(400).json({ message: 'User does not exist' });
 
+  // Verify password.
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
+  // Set username in the session if login is successful.
   req.session.username = username;
   res.json({ message: 'Login successful', success: true });
 });
 
+// Retrieve user settings.
 app.get('/api/settings', (req, res) => {
   const { username } = req.session;
   if (!username || !usersDb[username]) {
@@ -289,18 +319,25 @@ app.get('/api/settings', (req, res) => {
   res.json(usersDb[username]);
 });
 
+// Update user settings.
 app.post('/api/updateSettings', async (req, res) => {
   const { username } = req.session;
   if (!username || !usersDb[username]) return res.status(404).json({ message: 'User not found' });
 
   const { email, password } = req.body;
+
+  // Optionally update the email and password.
   if (email) usersDb[username].email = email;
   if (password) usersDb[username].password = await bcrypt.hash(password, 8);
+
   res.json({ message: 'Settings updated successfully' });
 });
 
+// Start the server on the configured port.
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+
+
 //Quynh's
 // create a json file
 
