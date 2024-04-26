@@ -56,8 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }), response);
         })
     }
-
-    console.log(loggedIn)
 });
 
 // function: change current page background color & send request to update user preferences
@@ -187,10 +185,7 @@ changeTextColor = (hex) => {
     const colorCode = "#" + hex;//change hex parameter to proper format
 
     //get & set all relevent text elements
-    const stats = document.getElementById("stats").getElementsByTagName("h3");
-    for(var i = 0; i < stats.length; i++){
-        stats[i].style.color = colorCode;
-    }
+    
     document.getElementById("description").style.color = colorCode;
     document.getElementById("username").style.color = colorCode;
     document.getElementById("line").style.borderColor = colorCode;
@@ -210,44 +205,38 @@ changeTextColor = (hex) => {
 function response(data, status){
 
     var response = JSON.parse(data);//parse data from server
-    console.log(data)
     //response 1: indicate user preferences have been saved
+    const res = response['action'];
     switch(response['action']){
         case "saved"://response 1: generic saved statement
             console.log("saved");
         case "updateProfile": //response 2: update user info
-            // console.log("Updated styles " + JSON.stringify(response['action']) + " " + status);
-
-            if(loggedIn != 'null' && loggedIn != null){
+            console.log("Updated styles " + JSON.stringify(response['action']) + " " + status);
+            console.log(user + " hello :))))")
+            if(loggedIn != 'null' && loggedIn != null && loggedIn==user){
                 console.log("logged in")
                 if(documentPath.indexOf("profile-editor.html") == -1){//update nav bar to say logged in user's username if we're not in profile editor
                     document.getElementById("my-profile").style.display = "default";
                     document.getElementById("my-profile").innerHTML = `Edit ${loggedIn}'s profile`;
-                    document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile-editor.html`
+                    document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("frontend/") + 9) + `profile-editor.html`;
                 } else {
                     document.getElementById("my-profile").style.display = "default";
                     document.getElementById("my-profile").innerHTML = `View ${loggedIn}'s profile`;
-                    document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("users/") + 6) + `${loggedIn}/profile.html`
+                    document.getElementById("my-profile").href = documentPath.substring(0, documentPath.lastIndexOf("frontend/") + 9) + `profile.html`
                 }
-                // document.getElementById("login-logout").innerHTML = "Log out";
-                // document.getElementById("login-logout").href = "";
-                // document.getElementById("login-logout").onclick = logOut;
                 document.getElementById("account-settings").style.display = "default";
             } else {
                 console.log("not logged in")
                 document.getElementById("my-profile").style.display = "none";
                 document.getElementById("account-settings").style.display = "none";
-                document.getElementById("login-logout").innerHTML = "Log in";
                 // document.getElementById("login-logout").href = "";
-                document.getElementById("login-logout").onclick = null;
             }
-
             document.getElementById("username").innerHTML = "@" + user;//ensure username is display appropriate user
             document.getElementById("description").value = response['description'];//update description for profile editor
             document.getElementById("description").innerHTML = response['description'];//update description for profile display
             changeTextColor(response["textColor"]);//call function to change text color
             console.log(response['pfp'] + " hello :)")
-            document.getElementById("profile-picture").src = `../../images/${response['pfp']}`;//update profile picture
+            document.getElementById("profile-picture").src = `../images/${response['pfp']}`;//update profile picture
             
 
             //background settings
@@ -256,22 +245,25 @@ function response(data, status){
                 document.getElementById("profile").style.backgroundColor = "#" + response['bgColor'];//update bg color
             } else {//image
                 document.getElementById("profile").style.backgroundColor = null;//ensure we don't display color
-                document.getElementById("profile").style.backgroundImage = `url("../../images/${response['bgImg']}")`;//update bg img
+                document.getElementById("profile").style.backgroundImage = `url("../images/${response['bgImg']}")`;//update bg img
             }
         case "descSaved"://response 3: display if description is saved
-            if(loggedIn == user && documentPath.indexOf("editor") != -1){
+            if( documentPath.indexOf("editor") != -1){
                 document.getElementById("descSaveStatus").innerHTML = "Status: Saved";
-                document.getElementById("descSaveStatus").style.color = "green";
+                document.getElementById("descSaveStatus").style.display = "none";
             }
         case "descNotSaved"://response 4: display if description is not saved
-            if(loggedIn == user && documentPath.indexOf("editor") != -1){
+        {
+            console.log(response['action'] + " hey")
+            if(documentPath.indexOf("editor") != -1){
                 document.getElementById("descSaveStatus").innerHTML = "Status: Not saved"
-                document.getElementById("descSaveStatus").style.color = "red";
-            }
+                document.getElementById("descSaveStatus").style.display = "none";
+            }}
         case "setLoggedIn"://update whos logged in
             loggedIn = response['username'];  
         case "setPage":
             whosPage = response['username'];
+            console.log(response["action"] + " " + whosPage)
     }
     return new Promise((resolve, reject) => {
         resolve("response resolved")
