@@ -349,10 +349,14 @@ app.post('/api/upload', upload.single('bgImg'), (req, res) => {
 });
 
 // User registration route.
+let usersDb = {};
+
 app.post('/api/signup', async (req, res) => {
   // Log incoming data for debugging purposes.
   console.log(req.body);
   const { username, password } = req.body;
+
+
 
   // Validate that username and password are provided.
   if (!username || !password) {
