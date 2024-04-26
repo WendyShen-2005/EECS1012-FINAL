@@ -414,6 +414,8 @@ app.post('/api/updateSettings', async (req, res) => {
 
 // Start the server on the configured port.
 const PORT = process.env.PORT || 3000;
+
+//Automatically Choose an Available Port
 app.listen(0, function() {
     console.log(`Server running on http://localhost:${this.address().port}`);
 });
