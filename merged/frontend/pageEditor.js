@@ -96,8 +96,9 @@ function loadBgImg() {
 
 //"save" function
 function save() {
-    var text={content: document.getElementById("textarea1").value,
+    var text={content: document.getElementById("textbox").textContent,
               title: document.getElementById("title").value};
+              
     //send data to server
     $.getJSON("http://localhost:3000/saveDraft", text, function(data) {
         alert("Your post has been saved.")
@@ -106,7 +107,7 @@ function save() {
 
 //"publish" function
 function publish() {
-    var text={content: document.getElementById("textarea1").value,
+    var text={content: document.getElementById("textbox").textContent,
               title: document.getElementById("title").value};
     //send data to server
     $.getJSON("http://localhost:3000/publishPost", text, function(data) {

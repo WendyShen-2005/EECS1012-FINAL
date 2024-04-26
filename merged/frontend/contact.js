@@ -6,6 +6,6 @@ function submit() {
     info["description"] = document.getElementById("desc").value;
 
     $.getJSON("http://localhost:3000/saveContact", info, function(data) { //send data to server
-        alert("Your post has been published."); //alert if successfully conducted
+        alert("Your request has been received."); //alert if successfully conducted
 })
 }
