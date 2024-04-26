@@ -342,7 +342,6 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 
 
 
-
 // Route to handle single file uploads under the 'bgImg' field in a form.
 app.post('/api/upload', upload.single('bgImg'), (req, res) => {
   // Respond with a JSON object indicating successful upload and file details.
@@ -415,7 +414,10 @@ app.post('/api/updateSettings', async (req, res) => {
 
 // Start the server on the configured port.
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(0, function() {
+    console.log(`Server running on http://localhost:${this.address().port}`);
+});
+
 
 
 //Quynh's
