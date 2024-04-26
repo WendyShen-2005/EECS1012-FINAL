@@ -8,6 +8,7 @@ body {
     background-size: cover;
     padding: 0 0;
 }
+/* styling for the navigation bar*/
 .navbar {
     background-color: #000000;
     overflow: hidden;
@@ -20,6 +21,11 @@ a.general {
     text-decoration: none;
     font-size: 17px;
 }
+a.general:hover {
+    text-decoration: underline;
+    transition: all 0.5s ease;
+    color:#ffffff
+}
 a.personal {
     float: right;
     color: #d4d0d0;
@@ -28,12 +34,20 @@ a.personal {
     text-decoration: none;
     font-size: 17px;
 }
+a.personal:hover {
+    text-decoration: underline;
+    transition: all 0.5s ease;
+    color:#ffffff
+}
+/* styling for blog's title*/
 h1 { 
     padding-top: 40px; 
     padding-bottom: 40px; 
     text-align: center;  
     font-family: 'Montserrat', sans-serif; 
 } 
+
+
 button { 
     width: 50px;
     height: 30px;
@@ -50,19 +64,28 @@ button:hover {
     background-color:#ffffff !important; 
 } 
   
-textarea { 
+.textbox { 
     padding: 3%; 
     outline: none;
     border-width: light;
     border-radius: 5px;
     opacity: 75%;
+    background-color: #d4d0d0;
     color: #000000;
     font-size: large;
+    width : 50vw;
+    height: 70vh;
+    text-align: left;
+    margin: auto;
+    overflow-y: auto;
+    text-overflow: clip;
+    word-wrap: break-word;
 } 
-.textbox { 
-    display: flex; 
-    justify-content: center;
+.rows {
+    width: 100%;
 }
+
+
 #toolbar { 
     display: flex; 
     justify-content: center; 
@@ -77,12 +100,17 @@ input {
     border: none;
     margin: 0 35%;
     background-color: transparent;
-    color: #916108;
+    color: #dddddd;
     text-align: center;
     font-weight: bolder;
     font-style: italic;
     font-size: 3em;
     float: center;
+    text-shadow: 2px 2px #000000;
+}
+
+title {
+    text-shadow: 1px 1px #000000;
 }
 input:focus {
     outline: none;
@@ -110,11 +138,11 @@ display: block;
 cursor: pointer;
 }
 
-.dropdown-content p:hover {background-color: #ddd;}
+.dropdown-content p:hover {background-color: #dddddd;}
 
 .show {display:block;}
 
-button.btnSubmit {
+.btnSubmit {
     width: 100px;
     height: 40px;
     background-color: #dddddd;
@@ -124,4 +152,41 @@ button.btnSubmit {
     border-radius: 4px;
     cursor: pointer;
 }
+form {
+    width: 15vw;
+    height: 5vh;
+    color: black !important; 
+    outline: none;
+    border:#000000;
+    border-radius: 0;
+    cursor: pointer;
+}
+.custom-div {
+    width: 50px;
+    height: 30px;
+    color: black !important; 
+    margin-bottom: 25px; 
+    padding: 5px 17px;
+    outline: none;
+    border:#000000;
+    border-radius: 0;
+    cursor: pointer;
+    background-color: #e9e9ed;
 
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+.custom-div:hover {
+    background-color:#ffffff !important; 
+}
+input[type="file"] {
+    display: none;
+  }
+div.form-row {
+    width:100%;
+    display: flex;
+  }
+.custom {
+    margin: auto;
+}
