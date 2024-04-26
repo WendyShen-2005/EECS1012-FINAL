@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Browser</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='../styles/Profile.css'>
+    <link rel='stylesheet' type='text/css' media='screen' href='../styles/Profile-browser.css'>
+    <script src="../scripts/profile-browser.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+    <div class="navbar">
+        <a class="navbar-button" href="../../../EECS1012-FINAL-quynh-branch/home.html">Home</a>
+        <div>
+            <a class="navbar-button" href="" id="account-settings">Account Settings</a>
+            <a class="navbar-button" href="../../frontend/contact.html">Contact Us</a>
+            <a class="navbar-button" onclick="logOut()" href="../../frontend/signUp.html" id="login-logout">Log out</a>
+        </div>
+    </div>
+    <br><br><br><br><br>
+    <h1>Profile Browser</h1>
+    <div>
+        <label>Search Profiles</label>
+        <input type="text" id="userSearch">
+    </div>
+    <hr>
+    <div id="profiles">
+        <h2>Profiles</h2>
+        
+    </div>
+</body>
+</html>
