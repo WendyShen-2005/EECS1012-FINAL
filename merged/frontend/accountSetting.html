@@ -4,17 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings Page</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="home.css">
     <script src="accountSetting.js" defer></script> <!-- Add 'defer' attribute to ensure script executes after DOM content is loaded -->
 </head>
 <body>
     <div class="Setting">
-        <div class="Group7">
+<!--      <div class="Group7">
             <div class="Rectangle4"></div>
             <a href="home.html"><button class="Home">Home</button></a>
             <a href="Profile-Editor.html"><button class="AuthOption MyProfile">My profile</button></a>
             <a href="General.html"><button class="AuthOption Setting">Setting</button></a>
         </div>
+    -->
+    <nav class="navbar">
+        <a href="home.html" class="general" id="home"> Home </a>
+        <a href="logIn.html" class= "personal" id="signup"> Log in</a>
+        <a href="General.html" class= "general" id="general"> General</a>
+        <a href="contact.html" class="general" id="contact"> Contact Us </a>
+    </nav>
         <div class="Group10">
             <div>
                 <input type="text" class="InputField Username" placeholder="Username">
