@@ -340,20 +340,8 @@ app.use(session({
 // Serve static files such as HTML, CSS, JavaScript from a specified directory.
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-// Configure storage for file uploads using multer, specifying the destination and filename.
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Save files in the 'frontend/images' directory.
-    cb(null, path.join(__dirname, 'frontend/images'));
-  },
-  filename: (req, file, cb) => {
-    // Rename the uploaded files by appending a timestamp to the original name.
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
 
-// Middleware to handle file uploads.
-const upload = multer({ storage });
+
 
 // Route to handle single file uploads under the 'bgImg' field in a form.
 app.post('/api/upload', upload.single('bgImg'), (req, res) => {
